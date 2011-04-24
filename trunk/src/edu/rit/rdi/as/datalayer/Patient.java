@@ -1,7 +1,11 @@
 package edu.rit.rdi.as.datalayer;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import static edu.rit.rdi.as.datalayer.Tables.*;
 
 /**
  * @date Apr 24, 2011
@@ -23,7 +27,7 @@ public class Patient extends AbstractDatabasePOJO {
     }
 
     public Patient( int patientId, String firstName, String lastName, String gender, String email, String phone,
-                   String username, String password ) {
+                    String username, String password ) {
         this();
         this.patientId = patientId;
         this.firstName = firstName;
@@ -34,7 +38,6 @@ public class Patient extends AbstractDatabasePOJO {
         this.username = username;
         this.password = password;
     }
-
 
     public Patient( int patientId ) {
         this();
@@ -86,19 +89,47 @@ public class Patient extends AbstractDatabasePOJO {
     }
 
     public boolean put() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        if( fetch() == null ) {
+            String sql = "INSERT INTO " + Patient + "(" + asColumns() + ") VALUES ("
+                         + patientId + ","
+                         + firstName + ","
+                         + lastName + ","
+                         + gender + ","
+                         + email + ","
+                         + phone + ","
+                         + username + ","
+                         + password + ")";
+            conn.executeUpdateQuery( sql );
+            return true;
+        } else {
+            return post();
+        }
     }
 
     public Object fetch( int primaryKeyId ) throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        String sql = "SELECT * FROM " + Patient + " WHERE patient_id = " + primaryKeyId;
+        ResultSet rs = conn.executeQuery( sql );
+        buildThisPatient( conn.getSingleRow( rs ) );
+        return this;
     }
 
     public Object fetch() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return fetch( patientId );
     }
 
     public boolean post() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        int executeUpdateQuery = -1;
+        //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
+        HashMap<String, String> columnsToData = asMap( false );
+        for( String key : columnsToData.keySet() ) {
+            String sql = "UPDATE " + Patient + " SET " + key + " = '" + columnsToData.get( key ) + "'"
+                         + " WHERE patient_id = " + patientId;
+            executeUpdateQuery = conn.executeUpdateQuery( sql );
+        }
+        if( executeUpdateQuery < 0 ) {
+            return false;
+        }
+        return true;
     }
 
     public boolean delete() throws SQLException {
@@ -111,5 +142,16 @@ public class Patient extends AbstractDatabasePOJO {
 
     public HashMap asMap( boolean includePrimaryKey ) {
         throw new UnsupportedOperationException( "Not supported yet." );
+    }
+
+    private static String asColumns() {
+        return "patientId, firstName, lastName, gender, email, phone, username, password";
+    }
+
+    /**
+     * Populates this Patient object with the specified data.
+     * @param data
+     */
+    private static void buildThisPatient( ArrayList<String> data ) {
     }
 }
