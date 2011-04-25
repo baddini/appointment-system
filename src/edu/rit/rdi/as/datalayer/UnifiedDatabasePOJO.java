@@ -22,7 +22,7 @@ public interface UnifiedDatabasePOJO {
      * Fetches an instance of this DatabasePOJO with the specified key. The instance object must be empty before
      * using this method, and the object will be populate with the retrieve data.
      * @param primaryKeyId The primary key of the object we want to fetch from the database.
-     * @return A populated instance of the database object.
+     * @return A populated instance of the database object, or null if the data was invalid.
      * @throws SQLException
      */
     public Object fetch( int primaryKeyId ) throws SQLException;
@@ -30,7 +30,7 @@ public interface UnifiedDatabasePOJO {
     /**
      * Fetches an instance of this DatbasePOJO. The instance object must have, at least, the primary key id
      * filled in before populating the rest of the object's data.
-     * @return A populated instance of the database object.
+     * @return A populated instance of the database object, or null if the data was invalid.
      * @throws SQLException
      */
     public Object fetch() throws SQLException;

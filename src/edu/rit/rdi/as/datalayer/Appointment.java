@@ -35,6 +35,16 @@ public class Appointment extends AbstractDatabasePOJO {
         this.patientId = patientId;
     }
 
+    public Appointment( int patientId ) {
+        this();
+        this.patientId = patientId;
+    }
+
+    public Appointment( int doctorId, String garbage ) {
+        this();
+        this.doctorId = doctorId;
+    }
+
     public int getAppointmentId() {
         return appointmentId;
     }
