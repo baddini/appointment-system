@@ -109,8 +109,10 @@ public class Patient extends AbstractDatabasePOJO {
     public Object fetch( int primaryKeyId ) throws SQLException {
         String sql = "SELECT * FROM " + Patient + " WHERE patient_id = " + primaryKeyId;
         ResultSet rs = conn.executeQuery( sql );
-        buildThisPatient( conn.getSingleRow( rs ) );
-        return this;
+        if( buildThisPatient( conn.getSingleRow( rs ) ) ) {
+            return this;
+        }
+        return null;
     }
 
     public Object fetch() throws SQLException {
@@ -133,11 +135,32 @@ public class Patient extends AbstractDatabasePOJO {
     }
 
     public boolean delete() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //There are no appointments for this patient - we can delete the patient information
+        if( new Appointment( patientId ).fetch() == null ) {
+            String sql = "DELETE FROM " + Patient + " WHERE patient_id = " + patientId;
+            int executeUpdateQuery = conn.executeUpdateQuery( sql );
+            if( executeUpdateQuery > 0 ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean fullDelete() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //First check if we can just delete this patient outright.
+        if( delete() ) {
+            return true;
+        } else {
+            //If we could not delete the patient, delete any appointments that patient may have.
+            String sql = "DELETE FROM " + Appointment + " WHERE patient_id = " + patientId;
+            int executeUpdateQuery = conn.executeUpdateQuery( sql );
+            if( executeUpdateQuery > 0 ) {
+                //Now that we have deleted all associated children of this patient, we should be able to delete
+                //the patient's information.
+                return delete();
+            }
+        }
+        return false;
     }
 
     public HashMap asMap( boolean includePrimaryKey ) {
@@ -151,7 +174,9 @@ public class Patient extends AbstractDatabasePOJO {
     /**
      * Populates this Patient object with the specified data.
      * @param data
+     * @return True if the given data is: not null and correctly populates this Patient object, else false.
      */
-    private static void buildThisPatient( ArrayList<String> data ) {
+    private static boolean buildThisPatient( ArrayList<String> data ) {
+        return false;
     }
 }
