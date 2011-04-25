@@ -8,6 +8,8 @@ import java.util.HashMap;
 import static edu.rit.rdi.as.datalayer.Tables.*;
 
 /**
+ * POJO for Patient table.
+ * This class exposes methods to deal with CRUD operations on a Patient object.
  * @date Apr 24, 2011
  * @author Eric Kisner
  */
@@ -20,14 +22,13 @@ public class Patient extends AbstractDatabasePOJO {
     private String email;
     private String phone;
     private String username;
-    private String password;
 
     public Patient() {
         super();
     }
 
     public Patient( int patientId, String firstName, String lastName, String gender, String email, String phone,
-                    String username, String password ) {
+                    String username ) {
         this();
         this.patientId = patientId;
         this.firstName = firstName;
@@ -36,7 +37,6 @@ public class Patient extends AbstractDatabasePOJO {
         this.email = email;
         this.phone = phone;
         this.username = username;
-        this.password = password;
     }
 
     public Patient( int patientId ) {
@@ -64,10 +64,6 @@ public class Patient extends AbstractDatabasePOJO {
         return lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -84,8 +80,7 @@ public class Patient extends AbstractDatabasePOJO {
                + "\tgender=" + gender
                + "\temail=" + email
                + "\tphone=" + phone
-               + "\tusername=" + username
-               + "\tpassword=" + password + '}';
+               + "\tusername=" + username + '}';
     }
 
     public boolean put() throws SQLException {
@@ -97,8 +92,7 @@ public class Patient extends AbstractDatabasePOJO {
                          + gender + ","
                          + email + ","
                          + phone + ","
-                         + username + ","
-                         + password + ")";
+                         + username + "," + ")";
             conn.executeUpdateQuery( sql );
             return true;
         } else {
@@ -164,19 +158,48 @@ public class Patient extends AbstractDatabasePOJO {
     }
 
     public HashMap asMap( boolean includePrimaryKey ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    private static String asColumns() {
-        return "patientId, firstName, lastName, gender, email, phone, username, password";
+        HashMap<String, String> map = new HashMap<String, String>();
+        if( includePrimaryKey ) {
+            map.put( "patient_id", String.valueOf( patientId ) );
+        }
+        map.put( "firstName", firstName );
+        map.put( "lastName", lastName );
+        map.put( "gender", gender );
+        map.put( "email", email );
+        map.put( "phone", phone );
+        map.put( "username", username );
+        return map;
     }
 
     /**
-     * Populates this Patient object with the specified data.
-     * @param data
+     * Returns this object's fields as a String of comma-separated values.
+     */
+    private static String asColumns() {
+        return "patientId, firstName, lastName, gender, email, phone, username";
+    }
+
+    /**
+     * Populates this Patient object with the specified data. The data must contain all fields of the table
+     * we are pulling from.
+     * @param data The data from a "SELECT *" statement.
      * @return True if the given data is: not null and correctly populates this Patient object, else false.
      */
-    private static boolean buildThisPatient( ArrayList<String> data ) {
-        return false;
+    private boolean buildThisPatient( ArrayList<String> data ) {
+        if( data == null || data.isEmpty() || data.size() < 7 ) {
+            return false;
+        }
+        try {
+            this.patientId = Integer.valueOf( data.get( 0 ) );
+        } catch( NumberFormatException ignore ) {
+            return false;
+        }
+        this.firstName = data.get( 1 );
+        this.lastName = data.get( 2 );
+        this.gender = data.get( 3 );
+        this.email = data.get( 4 );
+        this.phone = data.get( 5 );
+        this.username = data.get( 6 );
+
+        return true;
     }
 }
