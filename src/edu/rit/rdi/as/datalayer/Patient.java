@@ -175,7 +175,7 @@ public class Patient extends AbstractDatabasePOJO {
      * Returns this object's fields as a String of comma-separated values.
      */
     private static String asColumns() {
-        return "patientId, firstName, lastName, gender, email, phone, username";
+        return "patient_id, firstName, lastName, gender, email, phone, username";
     }
 
     /**
