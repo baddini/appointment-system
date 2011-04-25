@@ -1,9 +1,15 @@
 package edu.rit.rdi.as.datalayer;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import static edu.rit.rdi.as.datalayer.Tables.*;
+
 /**
+ * POJO for Appointment table.
+ * This class exposes methods to deal with CRUD operations on an Appointment object.
  * @date Apr 24, 2011
  * @author Eric Kisner
  */
@@ -75,30 +81,104 @@ public class Appointment extends AbstractDatabasePOJO {
     }
 
     public boolean put() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        if( fetch() == null ) {
+            String sql = "INSERT INTO " + Appointment + "(" + asColumns() + ") VALUES ("
+                         + appointmentId + ","
+                         + doctorId + ","
+                         + patientId + ","
+                         + date + ","
+                         + duration + ")";
+            conn.executeUpdateQuery( sql );
+            return true;
+        } else {
+            return post();
+        }
     }
 
     public Object fetch( int primaryKeyId ) throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        String sql = "SELECT * FROM " + Appointment + " WHERE appointment_id = " + primaryKeyId;
+        ResultSet rs = conn.executeQuery( sql );
+        if( buildThisAppointment( conn.getSingleRow( rs ) ) ) {
+            return this;
+        }
+        return null;
     }
 
     public Object fetch() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        return fetch( appointmentId );
     }
 
     public boolean post() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        int executeUpdateQuery = -1;
+        //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
+        HashMap<String, String> columnsToData = asMap( false );
+        for( String key : columnsToData.keySet() ) {
+            String sql = "UPDATE " + Appointment + " SET " + key + " = '" + columnsToData.get( key ) + "'"
+                         + " WHERE appointment_id = " + appointmentId;
+            executeUpdateQuery = conn.executeUpdateQuery( sql );
+        }
+        if( executeUpdateQuery < 0 ) {
+            return false;
+        }
+        return true;
     }
 
     public boolean delete() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //There are no children for an appointment, so we can just delete this appointment outright.
+        String sql = "DELETE FROM " + Appointment + " WHERE appointment_id = " + appointmentId;
+        int executeUpdateQuery = conn.executeUpdateQuery( sql );
+        if( executeUpdateQuery > 0 ) {
+            return true;
+        }
+        return false;
     }
 
     public boolean fullDelete() throws SQLException {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //Since there are no children for an appointment, we can just run the delete method.
+        return delete();
     }
 
     public HashMap asMap( boolean includePrimaryKey ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //Untyped hashmap, since we will be dealing with integers and Strings - easier to cast the information
+        //since we know what we are getting
+        HashMap map = new HashMap();
+        if( includePrimaryKey ) {
+            map.put( "appointment_id", String.valueOf( appointmentId ) );
+        }
+        map.put( "doctor_id", String.valueOf( doctorId ) );
+        map.put( "patient_id", String.valueOf( patientId ) );
+        map.put( "date", date );
+        map.put( "duration", duration );
+        return map;
+    }
+
+    /**
+     * Returns this object's fields as a String of comma-separated values.
+     */
+    private static String asColumns() {
+        return "appointment_id, doctor_id, patient_id, date, duration";
+    }
+
+    /**
+     * Populates this Appointment object with the specified data. The data must contain all fields of the table
+     * we are pulling from.
+     * @param data The data from a "SELECT *" statement.
+     * @return True if the given data is: not null and correctly populates this Appointment object, else false.
+     */
+    private boolean buildThisAppointment( ArrayList<String> data ) {
+        if( data == null || data.isEmpty() || data.size() < 5 ) {
+            return false;
+        }
+        try {
+            this.appointmentId = Integer.valueOf( data.get( 0 ) );
+            this.doctorId = Integer.valueOf( data.get( 1 ) );
+            this.patientId = Integer.valueOf( data.get( 2 ) );
+            this.duration = Integer.valueOf( data.get( 4 ) );
+        } catch( NumberFormatException ignore ) {
+            return false;
+        }
+        this.date = data.get( 3 );
+
+        return true;
     }
 }
