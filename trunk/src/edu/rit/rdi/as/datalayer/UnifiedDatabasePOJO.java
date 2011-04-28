@@ -1,6 +1,6 @@
 package edu.rit.rdi.as.datalayer;
 
-import java.sql.SQLException;
+import edu.rit.rdi.as.exceptions.DataLayerException;
 import java.util.HashMap;
 
 /**
@@ -16,47 +16,47 @@ public interface UnifiedDatabasePOJO {
      * @return True if the put or post was successful, else false.
      * @see UnifiedDatabasePOJO#post() 
      */
-    public boolean put() throws SQLException;
+    public boolean put() throws DataLayerException;
 
     /**
      * Fetches an instance of this DatabasePOJO with the specified key. The instance object must be empty before
      * using this method, and the object will be populate with the retrieve data.
      * @param primaryKeyId The primary key of the object we want to fetch from the database.
      * @return A populated instance of the database object, or null if the data was invalid.
-     * @throws SQLException
+     * @throws DataLayerException
      */
-    public Object fetch( int primaryKeyId ) throws SQLException;
+    public Object fetch( int primaryKeyId ) throws DataLayerException;
 
     /**
      * Fetches an instance of this DatbasePOJO. The instance object must have, at least, the primary key id
      * filled in before populating the rest of the object's data.
      * @return A populated instance of the database object, or null if the data was invalid.
-     * @throws SQLException
+     * @throws DataLayerException
      */
-    public Object fetch() throws SQLException;
+    public Object fetch() throws DataLayerException;
 
     /**
      * Updates data in the database based on the instance object's data.
      * @return True if data was updated, else false.
-     * @throws SQLException
+     * @throws DataLayerException
      */
-    public boolean post() throws SQLException;
+    public boolean post() throws DataLayerException;
 
     /**
      * Deletes this instance object from the database. If the object has child data, or foreign key constraints,
      * this method will do nothing.
      * @return True if the delete occurred (there was no child data), else false.
-     * @throws SQLException
+     * @throws DataLayerException
      */
-    public boolean delete() throws SQLException;
+    public boolean delete() throws DataLayerException;
 
     /**
      * Deletes this instance object from the database. If the object has child data, or foreign key constraints,
      * this method will also delete those data instances as well.
      * @return True if the full delete was successful, else false.
-     * @throws SQLException
+     * @throws DataLayerException
      */
-    public boolean fullDelete() throws SQLException;
+    public boolean fullDelete() throws DataLayerException;
 
     /**
      * Returns this instance object as a map of table headers to this object's data.

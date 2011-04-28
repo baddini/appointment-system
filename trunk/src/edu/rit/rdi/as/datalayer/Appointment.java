@@ -1,5 +1,6 @@
 package edu.rit.rdi.as.datalayer;
 
+import edu.rit.rdi.as.exceptions.DataLayerException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class Appointment extends AbstractDatabasePOJO {
                + "\tduration=" + duration + '}';
     }
 
-    public boolean put() throws SQLException {
+    public boolean put() throws DataLayerException {
         if( fetch() == null ) {
             String sql = "INSERT INTO " + Appointment + "(" + asColumns() + ") VALUES ("
                          + appointmentId + ","
@@ -88,34 +89,46 @@ public class Appointment extends AbstractDatabasePOJO {
                          + patientId + ","
                          + date + ","
                          + duration + ")";
-            conn.executeUpdateQuery( sql );
+            try {
+                conn.executeUpdateQuery( sql );
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Couldn't run INSERT statement: " + sql );
+            }
             return true;
         } else {
             return post();
         }
     }
 
-    public Object fetch( int primaryKeyId ) throws SQLException {
+    public Object fetch( int primaryKeyId ) throws DataLayerException {
         String sql = "SELECT * FROM " + Appointment + " WHERE appointment_id = " + primaryKeyId;
-        ResultSet rs = conn.executeQuery( sql );
-        if( buildThisAppointment( conn.getSingleRow( rs ) ) ) {
-            return this;
+        try {
+            ResultSet rs = conn.executeQuery( sql );
+            if( buildThisAppointment( conn.getSingleRow( rs ) ) ) {
+                return this;
+            }
+        } catch( SQLException sqle ) {
+            throw new DataLayerException( "Error running SELECT statement: " + sql );
         }
         return null;
     }
 
-    public Object fetch() throws SQLException {
+    public Object fetch() throws DataLayerException {
         return fetch( appointmentId );
     }
 
-    public boolean post() throws SQLException {
+    public boolean post() throws DataLayerException {
         int executeUpdateQuery = -1;
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
         HashMap<String, String> columnsToData = asMap( false );
         for( String key : columnsToData.keySet() ) {
             String sql = "UPDATE " + Appointment + " SET " + key + " = '" + columnsToData.get( key ) + "'"
                          + " WHERE appointment_id = " + appointmentId;
-            executeUpdateQuery = conn.executeUpdateQuery( sql );
+            try {
+                executeUpdateQuery = conn.executeUpdateQuery( sql );
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Error running UPDATE statement: " + sql );
+            }
         }
         if( executeUpdateQuery < 0 ) {
             return false;
@@ -123,17 +136,21 @@ public class Appointment extends AbstractDatabasePOJO {
         return true;
     }
 
-    public boolean delete() throws SQLException {
+    public boolean delete() throws DataLayerException {
         //There are no children for an appointment, so we can just delete this appointment outright.
         String sql = "DELETE FROM " + Appointment + " WHERE appointment_id = " + appointmentId;
-        int executeUpdateQuery = conn.executeUpdateQuery( sql );
-        if( executeUpdateQuery > 0 ) {
-            return true;
+        try {
+            int executeUpdateQuery = conn.executeUpdateQuery( sql );
+            if( executeUpdateQuery > 0 ) {
+                return true;
+            }
+        } catch( SQLException sqle ) {
+            throw new DataLayerException( "Error running DELETE statement: " + sql );
         }
         return false;
     }
 
-    public boolean fullDelete() throws SQLException {
+    public boolean fullDelete() throws DataLayerException {
         //Since there are no children for an appointment, we can just run the delete method.
         return delete();
     }
@@ -175,6 +192,7 @@ public class Appointment extends AbstractDatabasePOJO {
             this.patientId = Integer.valueOf( data.get( 2 ) );
             this.duration = Integer.valueOf( data.get( 4 ) );
         } catch( NumberFormatException ignore ) {
+            //Since the data we have received is invalid, we should return false.
             return false;
         }
         this.date = data.get( 3 );
