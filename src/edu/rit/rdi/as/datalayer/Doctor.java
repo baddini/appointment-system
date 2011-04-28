@@ -1,11 +1,14 @@
 package edu.rit.rdi.as.datalayer;
 
+import edu.rit.rdi.as.exceptions.DataLayerException;
 import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import static edu.rit.rdi.as.datalayer.Tables.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * POJO for Doctor table.
@@ -83,7 +86,7 @@ public class Doctor extends AbstractDatabasePOJO {
                + "\tusername=" + username + '}';
     }
 
-    public boolean put() throws SQLException {
+    public boolean put() throws DataLayerException {
         if( fetch() == null ) {
             String sql = "INSERT INTO " + Doctor + "(" + asColumns() + ") VALUES ("
                          + doctorId + ","
@@ -93,34 +96,46 @@ public class Doctor extends AbstractDatabasePOJO {
                          + email + ","
                          + phone + ","
                          + username + "," + ")";
-            conn.executeUpdateQuery( sql );
+            try {
+                conn.executeUpdateQuery( sql );
+            } catch( SQLException ex ) {
+                throw new DataLayerException( "Error running INSERT statement: " + sql );
+            }
             return true;
         } else {
             return post();
         }
     }
 
-    public Object fetch( int primaryKeyId ) throws SQLException {
+    public Object fetch( int primaryKeyId ) throws DataLayerException {
         String sql = "SELECT * FROM " + Doctor + " WHERE doctor_id = " + primaryKeyId;
-        ResultSet rs = conn.executeQuery( sql );
-        if( buildThisDoctor( conn.getSingleRow( rs ) ) ) {
-            return this;
+        try {
+            ResultSet rs = conn.executeQuery( sql );
+            if( buildThisDoctor( conn.getSingleRow( rs ) ) ) {
+                return this;
+            }
+        } catch( SQLException sqle ) {
+            throw new DataLayerException( "Error running SELECT statement: " + sql );
         }
         return null;
     }
 
-    public Object fetch() throws SQLException {
+    public Object fetch() throws DataLayerException {
         return fetch( doctorId );
     }
 
-    public boolean post() throws SQLException {
+    public boolean post() throws DataLayerException {
         int executeUpdateQuery = -1;
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
         HashMap<String, String> columnsToData = asMap( false );
         for( String key : columnsToData.keySet() ) {
             String sql = "UPDATE " + Doctor + " SET " + key + " = '" + columnsToData.get( key ) + "'"
                          + " WHERE doctor_id = " + doctorId;
-            executeUpdateQuery = conn.executeUpdateQuery( sql );
+            try {
+                executeUpdateQuery = conn.executeUpdateQuery( sql );
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Error running UPDATE statement: " + sql );
+            }
         }
         if( executeUpdateQuery < 0 ) {
             return false;
@@ -128,30 +143,38 @@ public class Doctor extends AbstractDatabasePOJO {
         return true;
     }
 
-    public boolean delete() throws SQLException {
+    public boolean delete() throws DataLayerException {
         //There are no appointments for this doctor - we can delete the doctor information
         if( new Appointment( doctorId, "garbage" ).fetch() == null ) {
             String sql = "DELETE FROM " + Doctor + " WHERE doctor_id = " + doctorId;
-            int executeUpdateQuery = conn.executeUpdateQuery( sql );
-            if( executeUpdateQuery > 0 ) {
-                return true;
+            try {
+                int executeUpdateQuery = conn.executeUpdateQuery( sql );
+                if( executeUpdateQuery > 0 ) {
+                    return true;
+                }
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Error running DELETE statement: " + sql );
             }
         }
         return false;
     }
 
-    public boolean fullDelete() throws SQLException {
+    public boolean fullDelete() throws DataLayerException {
         //First check if we can just delete this doctor outright.
         if( delete() ) {
             return true;
         } else {
             //If we could not delete the doctor, delete any appointments this doctor may have.
             String sql = "DELETE FROM " + Appointment + " WHERE doctor_id = " + doctorId;
-            int executeUpdateQuery = conn.executeUpdateQuery( sql );
-            if( executeUpdateQuery > 0 ) {
-                //Now that we have deleted all associated children of this doctor, we should be able to delete
-                //the doctor's information.
-                return delete();
+            try {
+                int executeUpdateQuery = conn.executeUpdateQuery( sql );
+                if( executeUpdateQuery > 0 ) {
+                    //Now that we have deleted all associated children of this doctor, we should be able to delete
+                    //the doctor's information.
+                    return delete();
+                }
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Error running DELETE statement: " + sql );
             }
         }
         return false;
@@ -191,6 +214,7 @@ public class Doctor extends AbstractDatabasePOJO {
         try {
             this.doctorId = Integer.valueOf( data.get( 0 ) );
         } catch( NumberFormatException ignore ) {
+            //Since the data we received is invalid, we should return false.
             return false;
         }
         this.firstName = data.get( 1 );
