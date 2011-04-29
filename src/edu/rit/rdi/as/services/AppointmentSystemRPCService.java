@@ -1,5 +1,6 @@
 package edu.rit.rdi.as.services;
 
+import edu.rit.rdi.as.database.DatabaseConnection;
 import edu.rit.rdi.as.utilities.ExceptionUtils;
 import javax.swing.JOptionPane;
 import org.apache.xmlrpc.WebServer;
@@ -28,6 +29,9 @@ public class AppointmentSystemRPCService {
         }
 
         try {
+            //Initial load for DatabaseConnection instance - to cut down on time when the user actually
+            //sees the interface.
+            DatabaseConnection.instance();
             WebServer server = new WebServer( port );
             server.addHandler( "appointment_service", new AppointmentHandler() );
             server.start();
