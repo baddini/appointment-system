@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class ServiceMessage extends AbstractMessage implements Serializable {
 
     public ServiceMessage() {
+        super();
     }
 
     public String getValue( String key ) {
