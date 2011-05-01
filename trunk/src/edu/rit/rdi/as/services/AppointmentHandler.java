@@ -1,5 +1,7 @@
 package edu.rit.rdi.as.services;
 
+import edu.rit.rdi.as.datalayer.Security;
+import edu.rit.rdi.as.exceptions.DataLayerException;
 import edu.rit.rdi.as.services.messages.ErrorMessage;
 import edu.rit.rdi.as.services.messages.Message;
 import edu.rit.rdi.as.services.messages.NullMessage;
@@ -20,11 +22,11 @@ public class AppointmentHandler {
 
     /**
      * Logs a doctor or patient into the Appointment Request System. The username and password for doctors
-     * and patients is pre-assigned. This is because, for this project, we didn't want to expand the scope
+     * and patients are pre-assigned. This is because, for this project, we didn't want to expand the scope
      * to handle new patients or new doctors trying to use the service. Instead, doctors and patients will
      * already have their username and passwords given to them.
      * @param username The doctor or patient username.
-     * @param password The doctor or patient password.
+     * @param password The doctor or patient password. The password should be hashed prior to calling this.
      * @return A {@link Message} that represents whether this user is a doctor or patient, and their Identification
      *         number. {@link NullMessage} will be passed back if the username/password combination is
      *         incorrect/invalid. {@link ErrorMessage} will be passed back if an error occurred.
@@ -32,7 +34,31 @@ public class AppointmentHandler {
      *         person's identification number.
      */
     public Message login( String username, String password ) {
-        return null;
+        Message ret = new NullMessage();
+        Security security = new Security();
+        int id = Integer.MIN_VALUE;
+
+        try {
+            id = security.loginDoctor( username, password );
+            if( id != -1 ) {
+                ret = new ServiceMessage();
+                ret.setValue( "DOCTOR", String.valueOf( id ) );
+                return ret;
+            }
+            id = security.loginPatient( username, password );
+            if( id != -1 ) {
+                ret = new ServiceMessage();
+                ret.setValue( "PATIENT", String.valueOf( id ) );
+                return ret;
+            }
+        } catch( DataLayerException dle ) {
+            ret = new ErrorMessage();
+            ret.setValue( "ERROR", dle.getMessage() + "\n" + dle );
+            ret.setValue( "DISPLAY_ERROR", "There was an error trying to log in to the service." );
+            return ret;
+        }
+
+        return ret;
     }
 
     /**
@@ -45,7 +71,7 @@ public class AppointmentHandler {
      *         A valid {@link ServiceMessage} will have a tag "APPOINTMENT_#" that will contain a String that is
      *         formatted like such: DOCTOR_ID,TIME_STRING
      */
-    public Message getAppointments( int patientId ) {
+    public Message getPatientAppointments( int patientId ) {
         return null;
     }
 
@@ -53,15 +79,13 @@ public class AppointmentHandler {
      * Gets all appointments for a doctor.
      * @param doctorId The doctor's Identification number. This will be held by the client once the doctor logs into
      *                 the service.
-     * @param garbage Since there is a {@link AppointmentHandler#getAppointments(int)}, the signature cannot be the
-     *                same, so we can pass in a garbage string.
      * @return A {@link Message} that represents a list of appointments for the specified doctor. {@link NullMessage}
      *         will be passed back if the doctor does not have any appointments. {@link ErrorMessage} will be passed
      *         back if an error occurred.
      *         A valid {@link ServiceMessage} will have a tag "APPOINTMENT_#" that will contain a String that is
      *         formatted like such: PATIENT_ID,TIME_STRING
      */
-    public Message getApppointments( int doctorId, String garbage ) {
+    public Message getDoctorAppointments( int doctorId ) {
         return null;
     }
 
