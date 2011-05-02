@@ -1,0 +1,14 @@
+/***************
+  Master CSS
+  Author: Alexander Miner
+  Project: RDI Project 2
+  Group: E Man Maet
+    Eric Kisner
+	Charles Porter
+	Alexander Miner
+****************/
+
+div#main{
+	width: 780px;
+    margin: 0 auto 0 auto;
+}
