@@ -90,9 +90,9 @@ public class AppointmentHandler {
     }
 
     /**
-     * Get a certain appointment for a specified time and date.
+     * Get a certain appointment for a specified date.
      * @param timeframe The time that we want to look for an appointment. A valid timeframe string will look like:
-     *                  "Day-Month-Year Hours-Minutes-Seconds"
+     *                  "Year-Month-Day" or "Year-Month-Day Hours:Minutes"
      * @return A {@link Message} that represents an appointment for the specified timeframe. {@link NullMessage}
      *         will be passed back if there are no appointments for the given time. {@link ErrorMessage} will be passed
      *         back if an error occurred.
@@ -105,7 +105,7 @@ public class AppointmentHandler {
 
     /**
      * Get a list of appointments for a given time frame.
-     * Valid timeframe strings will look like: "Day-Month-Year Hours-Minutes-Seconds"
+     * Valid timeframe strings will look like: "Year-Month-Day" or "Year-Month-Day Hours:Minutes"
      * @param startTimeframe The start, inclusive, of when we want to start looking for appointments.
      * @param endTimeframe The end, inclusive, of when we want to stop looking for appointments.
      * @return A {@link Message} that represents a list of appointments for the specified timeframe. {@link NullMessage}
