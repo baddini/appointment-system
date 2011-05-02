@@ -1,7 +1,7 @@
 package edu.rit.rdi.as.services.messages;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.EnumMap;
 
 /**
  * Null Message represents a null value. The null message has no tag/value pairs, and thus throws an exception if
@@ -14,16 +14,18 @@ public class NullMessage extends AbstractMessage implements Serializable {
     public NullMessage() {
     }
 
-    public String getValue( String key ) {
+    @Override
+    public String getValue( ValidTags tag ) {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
-    public void setValue( String key, String value ) {
+    @Override
+    public void setValue( ValidTags tag, String value ) {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
 
-    public HashMap<String, String> getValues() {
+    @Override
+    public EnumMap<ValidTags, String> getValues() {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
-
 }

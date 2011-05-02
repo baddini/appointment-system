@@ -16,17 +16,4 @@ public class ErrorMessage extends AbstractMessage implements Serializable {
     public ErrorMessage() {
         super();
     }
-
-    public String getValue( String key ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    public void setValue( String key, String value ) {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
-    public HashMap<String, String> getValues() {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
-
 }

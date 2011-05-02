@@ -6,6 +6,9 @@ import edu.rit.rdi.as.services.messages.ErrorMessage;
 import edu.rit.rdi.as.services.messages.Message;
 import edu.rit.rdi.as.services.messages.NullMessage;
 import edu.rit.rdi.as.services.messages.ServiceMessage;
+import java.util.List;
+
+import static edu.rit.rdi.as.services.messages.Message.ValidTags.*;
 
 /**
  * Appointment Handler handles calls to the REST Service that hosts the Appointment Request System.
@@ -42,19 +45,19 @@ public class AppointmentHandler {
             id = security.loginDoctor( username, password );
             if( id != -1 ) {
                 ret = new ServiceMessage();
-                ret.setValue( "DOCTOR", String.valueOf( id ) );
+                ret.setValue( DOCTOR, String.valueOf( id ) );
                 return ret;
             }
             id = security.loginPatient( username, password );
             if( id != -1 ) {
                 ret = new ServiceMessage();
-                ret.setValue( "PATIENT", String.valueOf( id ) );
+                ret.setValue( PATIENT, String.valueOf( id ) );
                 return ret;
             }
         } catch( DataLayerException dle ) {
             ret = new ErrorMessage();
-            ret.setValue( "ERROR", dle.getMessage() + "\n" + dle );
-            ret.setValue( "DISPLAY_ERROR", "There was an error trying to log in to the service." );
+            ret.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            ret.setValue( DISPLAY_ERROR, "There was an error trying to log in to the service." );
             return ret;
         }
 
@@ -65,13 +68,15 @@ public class AppointmentHandler {
      * Gets all appointments for a patient.
      * @param patientId The patient's Identification number. This will be held by the client once the client logs
      *                  into the service.
-     * @return A {@link Message} that represents a list of appointments for the specified patient. {@link NullMessage}
-     *         will be passed back if the patient does not have any appointments. {@link ErrorMessage} will be passed
-     *         back if an error occurred.
-     *         A valid {@link ServiceMessage} will have a tag "APPOINTMENT_#" that will contain a String that is
-     *         formatted like such: DOCTOR_ID,TIME_STRING
+     * @return A list of {@link Message}s that represents a list of appointments for the specified patient.
+     *         {@link NullMessage} will be passed back if the patient does not have any appointments.
+     *         {@link ErrorMessage} will be passed back if an error occurred.
+     *         A valid list of {@link ServiceMessage}s will have a tag "APPOINTMENT" that will contain a String that is
+     *         formatted like such: DOCTOR_ID,TIME_STRING.
+     *         This method will only return a list of size greater than 1 if there are more than one appointment for
+     *         the patient.
      */
-    public Message getPatientAppointments( int patientId ) {
+    public List<Message> getPatientAppointments( int patientId ) {
         return null;
     }
 
