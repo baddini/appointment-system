@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static edu.rit.rdi.as.datalayer.Tables.*;
 
@@ -117,6 +118,53 @@ public class Appointment extends AbstractDatabasePOJO {
         return fetch( appointmentId );
     }
 
+    /**
+     * Fetches a list of appointments for a given patient.
+     * @param patientId The patient's Identification number.
+     * @return A list of appointment objects that are directly related to the patient.
+     * @throws DataLayerException
+     */
+    public List<Appointment> fetchByPatient( int patientId ) throws DataLayerException {
+        String sql = "SELECT * FROM " + Appointment + " WHERE patient_id = " + patientId;
+        return retrieveAppointments( sql );
+    }
+
+    /**
+     * Fetches a list of appointments for a given doctor.
+     * @param doctorId The doctor's Identification number.
+     * @return A list of appointment objects that are directly related to the doctor.
+     * @throws DataLayerException
+     */
+    public List<Appointment> fetchByDoctor( int doctorId ) throws DataLayerException {
+        String sql = "SELECT * FROM " + Appointment + " WHERE doctor_id = " + doctorId;
+        return retrieveAppointments( sql );
+    }
+
+    /**
+     * Fetches a list of a appointments for a given day and time.
+     * @param day Either a day string 'YYYY-MM-DD' or day and time string 'YYYY-MM-DD HH:MM'
+     * @return A list of appointments on that day, or a single appointment for a specific day and time.
+     * @throws DataLayerException
+     */
+    public List<Appointment> fetchByDay( String day ) throws DataLayerException {
+        String sql = "SELECT * FROM " + Appointment + " WHERE date LIKE '" + day + "%'";
+        return retrieveAppointments( sql );
+    }
+
+    /**
+     * Fetches a list of appointments for a given date span. A date must be formatted like: 'YYYY-MM-DD' or
+     * 'YYYY-MM-DD HH:MM'.
+     * @param startTime The start date/time.
+     * @param endTime The end date/time (non-inclusive).
+     * @return A list of appointments that fall in between <code>startTime</code> and <code>endTime</code>.
+     * @throws DataLayerException
+     */
+    public List<Appointment> fetchByDaySpan( String startTime, String endTime ) throws DataLayerException {
+        String sql = "SELECT * FROM " + Appointment + " WHERE CAST(date AS DATE) "
+                     + "BETWEEN '" + startTime + "'% AND '" + endTime + "%'";
+        return retrieveAppointments( sql );
+    }
+
     public boolean post() throws DataLayerException {
         int executeUpdateQuery = -1;
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
@@ -198,5 +246,26 @@ public class Appointment extends AbstractDatabasePOJO {
         this.date = data.get( 3 );
 
         return true;
+    }
+
+    /**
+     * Retrieve a list of appointments based on a sql statement.
+     * @param sql A SQL statement that may produce more than one Appointment result.
+     * @return A list of appointments for the given statement.
+     * @throws DataLayerException
+     */
+    private List<Appointment> retrieveAppointments( String sql ) throws DataLayerException {
+        try {
+            ResultSet rs = conn.executeQuery( sql );
+            ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+            for( ArrayList<String> row : conn.getData( rs ) ) {
+                if( buildThisAppointment( row ) ) {
+                    appointments.add( this );
+                }
+            }
+            return appointments;
+        } catch( SQLException sqle ) {
+            throw new DataLayerException( "Error running SELECT statement: " + sql );
+        }
     }
 }
