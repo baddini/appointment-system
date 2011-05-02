@@ -121,7 +121,8 @@ public class Appointment extends AbstractDatabasePOJO {
     /**
      * Fetches a list of appointments for a given patient.
      * @param patientId The patient's Identification number.
-     * @return A list of appointment objects that are directly related to the patient.
+     * @return A list of appointment objects that are directly related to the patient, or an empty list
+     *         if there are no appointments for the patient.
      * @throws DataLayerException
      */
     public List<Appointment> fetchByPatient( int patientId ) throws DataLayerException {
@@ -132,7 +133,8 @@ public class Appointment extends AbstractDatabasePOJO {
     /**
      * Fetches a list of appointments for a given doctor.
      * @param doctorId The doctor's Identification number.
-     * @return A list of appointment objects that are directly related to the doctor.
+     * @return A list of appointment objects that are directly related to the doctor or an empty list
+     *         if there are no appointments for the doctor.
      * @throws DataLayerException
      */
     public List<Appointment> fetchByDoctor( int doctorId ) throws DataLayerException {
@@ -143,7 +145,8 @@ public class Appointment extends AbstractDatabasePOJO {
     /**
      * Fetches a list of a appointments for a given day and time.
      * @param day Either a day string 'YYYY-MM-DD' or day and time string 'YYYY-MM-DD HH:MM'
-     * @return A list of appointments on that day, or a single appointment for a specific day and time.
+     * @return A list of appointments on that day, or a single appointment for a specific day and time or an
+     *         empty list if there are no appointments on that day.
      * @throws DataLayerException
      */
     public List<Appointment> fetchByDay( String day ) throws DataLayerException {
@@ -156,7 +159,8 @@ public class Appointment extends AbstractDatabasePOJO {
      * 'YYYY-MM-DD HH:MM'.
      * @param startTime The start date/time.
      * @param endTime The end date/time (non-inclusive).
-     * @return A list of appointments that fall in between <code>startTime</code> and <code>endTime</code>.
+     * @return A list of appointments that fall in between <code>startTime</code> and <code>endTime</code> or
+     *         an empty list if there are no appointments between those times.
      * @throws DataLayerException
      */
     public List<Appointment> fetchByDaySpan( String startTime, String endTime ) throws DataLayerException {
