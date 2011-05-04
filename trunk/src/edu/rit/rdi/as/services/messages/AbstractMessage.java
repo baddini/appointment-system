@@ -41,7 +41,7 @@ public abstract class AbstractMessage implements Message {
             build.append( TAG_DELIM );
         }
         //Remove the last delimiter
-        build.deleteCharAt( build.length() );
+        build.deleteCharAt( build.lastIndexOf( TAG_DELIM ) );
         return build.toString();
     }
 }
