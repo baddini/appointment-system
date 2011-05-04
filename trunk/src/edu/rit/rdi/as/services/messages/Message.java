@@ -30,6 +30,16 @@ public interface Message {
      */
     public EnumMap<ValidTags, String> getValues();
 
+    /**
+     * Serializes the Message object into a String.
+     * It appears that the REST service is not allowing a Message object to be serialized, so the easiest
+     * work-around for this problem is to just return a String that represents a Message object.
+     * @return The string representation of a Message object. The returned value will consist of each tag, followed
+     * by a "=>" delimiter, followed by the tag's value, followed by a "|" delimiter to separate each
+     * tag entry.
+     */
+    public String serialize();
+
     public enum ValidTags {
         DOCTOR, PATIENT, APPOINTMENT, ERROR, DISPLAY_ERROR
     }
