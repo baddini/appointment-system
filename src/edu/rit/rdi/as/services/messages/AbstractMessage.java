@@ -9,6 +9,8 @@ import java.util.EnumMap;
  */
 public abstract class AbstractMessage implements Message {
 
+    private static final String TAG_TO_VAL_DELIM = "=>";
+    private static final String TAG_DELIM = "|";
     protected EnumMap<ValidTags, String> tagsToValues;
 
     public AbstractMessage() {
@@ -28,5 +30,18 @@ public abstract class AbstractMessage implements Message {
 
     public EnumMap<ValidTags, String> getValues() {
         return tagsToValues;
+    }
+
+    public String serialize() {
+        StringBuilder build = new StringBuilder();
+        for( ValidTags tag : tagsToValues.keySet() ) {
+            build.append( tag.name() );
+            build.append( TAG_TO_VAL_DELIM );
+            build.append( tagsToValues.get( tag ) );
+            build.append( TAG_DELIM );
+        }
+        //Remove the last delimiter
+        build.deleteCharAt( build.length() );
+        return build.toString();
     }
 }
