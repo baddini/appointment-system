@@ -98,8 +98,8 @@ public class Doctor extends AbstractDatabasePOJO {
                          + username + "," + ")";
             try {
                 conn.executeUpdateQuery( sql );
-            } catch( SQLException ex ) {
-                throw new DataLayerException( "Error running INSERT statement: " + sql );
+            } catch( SQLException sqle ) {
+                throw new DataLayerException( "Error running INSERT statement: " + sql, sqle );
             }
             return true;
         } else {
@@ -115,7 +115,7 @@ public class Doctor extends AbstractDatabasePOJO {
                 return this;
             }
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Error running SELECT statement: " + sql );
+            throw new DataLayerException( "Error running SELECT statement: " + sql, sqle );
         }
         return null;
     }
@@ -134,7 +134,7 @@ public class Doctor extends AbstractDatabasePOJO {
             try {
                 executeUpdateQuery = conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
-                throw new DataLayerException( "Error running UPDATE statement: " + sql );
+                throw new DataLayerException( "Error running UPDATE statement: " + sql, sqle );
             }
         }
         if( executeUpdateQuery < 0 ) {
@@ -153,7 +153,7 @@ public class Doctor extends AbstractDatabasePOJO {
                     return true;
                 }
             } catch( SQLException sqle ) {
-                throw new DataLayerException( "Error running DELETE statement: " + sql );
+                throw new DataLayerException( "Error running DELETE statement: " + sql, sqle );
             }
         }
         return false;
@@ -174,7 +174,7 @@ public class Doctor extends AbstractDatabasePOJO {
                     return delete();
                 }
             } catch( SQLException sqle ) {
-                throw new DataLayerException( "Error running DELETE statement: " + sql );
+                throw new DataLayerException( "Error running DELETE statement: " + sql, sqle );
             }
         }
         return false;
