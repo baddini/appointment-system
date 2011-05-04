@@ -93,7 +93,7 @@ public class Appointment extends AbstractDatabasePOJO {
             try {
                 conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
-                throw new DataLayerException( "Couldn't run INSERT statement: " + sql );
+                throw new DataLayerException( "Couldn't run INSERT statement: " + sql, sqle );
             }
             return true;
         } else {
@@ -109,7 +109,7 @@ public class Appointment extends AbstractDatabasePOJO {
                 return this;
             }
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Error running SELECT statement: " + sql );
+            throw new DataLayerException( "Error running SELECT statement: " + sql, sqle );
         }
         return null;
     }
@@ -179,7 +179,7 @@ public class Appointment extends AbstractDatabasePOJO {
             try {
                 executeUpdateQuery = conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
-                throw new DataLayerException( "Error running UPDATE statement: " + sql );
+                throw new DataLayerException( "Error running UPDATE statement: " + sql, sqle );
             }
         }
         if( executeUpdateQuery < 0 ) {
@@ -197,7 +197,7 @@ public class Appointment extends AbstractDatabasePOJO {
                 return true;
             }
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Error running DELETE statement: " + sql );
+            throw new DataLayerException( "Error running DELETE statement: " + sql, sqle );
         }
         return false;
     }
@@ -269,7 +269,7 @@ public class Appointment extends AbstractDatabasePOJO {
             }
             return appointments;
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Error running SELECT statement: " + sql );
+            throw new DataLayerException( "Error running SELECT statement: " + sql, sqle );
         }
     }
 }

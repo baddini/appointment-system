@@ -39,9 +39,9 @@ public class Security {
                 return patientId;
             }
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Problem running query: " + sql );
+            throw new DataLayerException( "Problem running query: " + sql, sqle );
         } catch( NumberFormatException nfe ) {
-            throw new DataLayerException( "Problem running query: " + sql );
+            throw new DataLayerException( "Problem running query: " + sql, nfe );
         }
         return -1;
     }
@@ -66,9 +66,9 @@ public class Security {
                 return patientId;
             }
         } catch( SQLException sqle ) {
-            throw new DataLayerException( "Problem running query: " + sql );
+            throw new DataLayerException( "Problem running query: " + sql, sqle );
         } catch( NumberFormatException nfe ) {
-            throw new DataLayerException( "Problem running query: " + sql );
+            throw new DataLayerException( "Problem running query: " + sql, nfe );
         }
         return -1;
     }

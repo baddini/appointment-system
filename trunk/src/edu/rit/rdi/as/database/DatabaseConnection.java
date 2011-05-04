@@ -29,10 +29,11 @@ public class DatabaseConnection {
     /**
      * Default static configuration variables
      */
-    private static final String HOST = "localhost:3307";
-    private static final String DATABASE = "vardb";
-    private static final String UID = "root";
-    private static final String PASS = "";
+    private static final String HOST = "simon.ist.rit.edu:3306";
+    private static final String DATABASE = "rdi1";
+    private static final String UID = "rdi1";
+    //TODO: Yeah... this is def a security risk.
+    private static final String PASS = "Pw4k)7L7";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://";
     private String host = HOST;
