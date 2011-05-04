@@ -153,7 +153,7 @@ public class AppointmentHandler {
      *         This method will only return a list of size greater than 1 if there are more than one appointment for
      *         the day.
      */
-    public List<Message> getAppointment( String timeframe ) {
+    public List<Message> getAppointmentsByDay( String timeframe ) {
         Message m = null;
         Appointment appointment = new Appointment();
         try {
@@ -191,7 +191,7 @@ public class AppointmentHandler {
      *         This method will only return a list of size greater than 1 if there are more than one appointment for
      *         the time frame.
      */
-    public List<Message> getAppointments( String startTimeframe, String endTimeframe ) {
+    public List<Message> getAppointmentsByTimespan( String startTimeframe, String endTimeframe ) {
         Message m = null;
         Appointment appointment = new Appointment();
         try {
