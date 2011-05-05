@@ -11,30 +11,30 @@ public abstract class AbstractMessage implements Message {
 
     private static final String TAG_TO_VAL_DELIM = "=>";
     private static final String TAG_DELIM = "|";
-    protected EnumMap<ValidTags, String> tagsToValues;
+    protected EnumMap<ValidTag, String> tagsToValues;
 
     public AbstractMessage() {
-        tagsToValues = new EnumMap<ValidTags, String>( ValidTags.class );
+        tagsToValues = new EnumMap<ValidTag, String>( ValidTag.class );
     }
 
-    public String getValue( ValidTags tag ) {
+    public String getValue( ValidTag tag ) {
         if( tagsToValues.containsKey( tag ) ) {
             return tagsToValues.get( tag );
         }
         return null;
     }
 
-    public void setValue( ValidTags tag, String value ) {
+    public void setValue( ValidTag tag, String value ) {
         tagsToValues.put( tag, value );
     }
 
-    public EnumMap<ValidTags, String> getValues() {
+    public EnumMap<ValidTag, String> getValues() {
         return tagsToValues;
     }
 
     public String serialize() {
         StringBuilder build = new StringBuilder();
-        for( ValidTags tag : tagsToValues.keySet() ) {
+        for( ValidTag tag : tagsToValues.keySet() ) {
             build.append( tag.name() );
             build.append( TAG_TO_VAL_DELIM );
             build.append( tagsToValues.get( tag ) );
