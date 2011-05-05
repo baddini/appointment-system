@@ -288,11 +288,12 @@ public class DatabaseConnection {
 
     /**
      * Gets a single row's data. This method should only be used when the ResultSet is known to only return one row.
-     * Prior to using this method, the ResultSet cursor should already be on the first row.
      * @return The result set's data as a collection of strings.
      * @throws SQLException
      */
     public ArrayList<String> getSingleRow( ResultSet rs ) throws SQLException {
+        //Set ResultSet cursor to first and only row.
+        rs.next();
         ArrayList<String> ret = new ArrayList<String>();
         for( int i = 1; i <= rs.getMetaData().getColumnCount(); i++ ) {
             String toAdd = rs.getString( i );
