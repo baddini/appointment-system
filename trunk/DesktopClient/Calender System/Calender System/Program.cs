@@ -15,7 +15,7 @@ namespace Calender_System
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DayPatientView());
+            Application.Run(new LoginView());
         }
     }
 }

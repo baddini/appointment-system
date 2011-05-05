@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calender System", "Calender System\Calender System.csproj", "{CB202B2C-7F0C-4DC6-9981-DBAC9CDE9F68}"
 EndProject
 Global
