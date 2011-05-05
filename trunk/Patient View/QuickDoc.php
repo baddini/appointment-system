@@ -35,7 +35,7 @@ QuickDoc.php
 			showTest();
 		?>
 	
-		<form name = "control" method = "post" action="QuickDoc.php" onsubmit="return validateForm(this)">
+		<form name = "control" method = "post" action="QuickDoc.php"> <!--onsubmit="return validateForm(this)" -->
 			<?php
 				buildControl();
 			?>
