@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -292,15 +293,16 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public ArrayList<String> getSingleRow( ResultSet rs ) throws SQLException {
-        //Set ResultSet cursor to first and only row.
-        rs.next();
         ArrayList<String> ret = new ArrayList<String>();
-        for( int i = 1; i <= rs.getMetaData().getColumnCount(); i++ ) {
-            String toAdd = rs.getString( i );
-            if( rs.wasNull() || toAdd.equalsIgnoreCase( "null" ) ) {
-                continue;
+        //Set ResultSet cursor to first and only row.
+        if( rs.next() ) {
+            for( int i = 1; i <= rs.getMetaData().getColumnCount(); i++ ) {
+                String toAdd = rs.getString( i );
+                if( rs.wasNull() || toAdd.equalsIgnoreCase( "null" ) ) {
+                    continue;
+                }
+                ret.add( toAdd );
             }
-            ret.add( toAdd );
         }
         return ret;
     }
