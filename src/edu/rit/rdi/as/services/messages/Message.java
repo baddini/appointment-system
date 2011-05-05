@@ -40,7 +40,29 @@ public interface Message {
      */
     public String serialize();
 
+    /**
+     * Enum for valid tags to be placed in a Message object.
+     */
     public enum ValidTags {
-        DOCTOR, PATIENT, APPOINTMENT, ERROR, DISPLAY_ERROR
+        /**
+         * Doctor tag. Used for categorizing information about a doctor.
+         */
+        DOCTOR,
+        /**
+         * Patient tag. Used for categorizing information about a patient.
+         */
+        PATIENT,
+        /**
+         * Appointment tag. Used for categorizing information about an appointment.
+         */
+        APPOINTMENT,
+        /**
+         * Error tag. Used for categorizing fully-detailed information about an error that has occurred.
+         */
+        ERROR,
+        /**
+         * Display error tag. Used for categorizing simple information about an error.
+         */
+        DISPLAY_ERROR
     }
 }
