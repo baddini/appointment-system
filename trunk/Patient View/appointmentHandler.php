@@ -8,32 +8,35 @@
 	Charles Porter
 	Alexander Miner
 ****************/
-	$pageState;
-	$controlState;
+	$pageState;			//holds state of page to display
+	$controlState;		//holds state of control to display form controls
+	$myName;			//holds name of logged in user
 	
 	function init(){
 		global $pageState;
 		global $controlState;
 		
-		$pageState = "login";
-		$controlState = "login";
+		if(!(isset($_POST['pageState']))){		//if page is receiving a POST submission
+			$pageState = "login";
+			$controlState = "login";
+		}
 	}
 	
 	//updates the page
 	function updatePage(){
 		global $pageState;
 		global $controlState;
+		global $myName;
 		
 		if(isset($_POST['pageState'])){		//if page is receiving a POST submission
 			if(($_POST['pageState']) == "login_attempt"){	//if attempting to log in
 				//if login fails, display error field, echo error message
 				
 				//else, set pageState to home page (my appointments view)
-			{
-			$state = ($_POST['pageState']);	//sets the state to populate the proper display
-		}
-		if(isset($_POST['controlState'])){		//if page is receiving a POST submission
-			$state = ($_POST['controlState']);	//sets the state to populate the proper control
+				$pageState = "myAppointments";
+				$controlState = "Logged in";	
+				$myName = "Test Name";
+			}
 		}
 	}
 	
@@ -42,30 +45,48 @@
 		global $controlState;
 		
 		if($controlState == "login"){
-			echo(buildLogin());
+			buildLogin();
+		}
+		else if($controlState == "Logged in"){
+			buildMain();
 		}
 	}
 	
 	//build the login display
-	function string buildLogin(){
+	function buildLogin(){
 		$dispBuild = "<table border = 0 cellpadding = 0 cellspacing = 0>";
-		$dispBuild = $dispBuild + "<tr><td>Name</td><input type = 'text' name = 'login_name' size = '15' maxlength = '30' value = ''></td></tr>";
-		$dispBuild = $dispBuild + "<tr><td>Password</td><input type = 'text' name = 'login_pass' size = '15' maxlength = '30' value = ''></td></tr>";
-		$dispBuild = $dispBuild + "</table>";
-		$dispBuild = $dispBuild + "<input type = 'hidden' name = 'pageState' value = 'login_attempt' />";
-		$dispBuild = $dispBuild + "<input type = 'Submit' name = 'login_submit' value = 'login'>";
-		return $dispBuild;
+		$dispBuild = $dispBuild . "<tr><td>Name</td><td><input type = 'text' name = 'login_name' size = '15' maxlength = '30' value = ''></td></tr>";
+		$dispBuild = $dispBuild . "<tr><td>Password</td><td><input type = 'password' name = 'login_pass' size = '15' maxlength = '30' value = ''></td></tr>";
+		$dispBuild = $dispBuild . "</table>";
+		$dispBuild = $dispBuild . "<input type = 'hidden' name = 'pageState' value = 'login_attempt' />";
+		$dispBuild = $dispBuild . "<input type = 'Submit' name = 'login_submit' value = 'login' />";
+		echo($dispBuild);
+	}
+	
+	//builds main control
+	function buildMain(){
+		addLogout();
+	}
+	
+	//adds the log out button
+	function addLogout(){
+		echo "<input type = 'Submit' name = 'logout_submit' value = 'logout' />";
 	}
 	
 	//set up a display test
 	function showTest(){
-		//if($pageState == ""){
-			echo "<p>This is where the display will go...once I have stuff to display.</p>";
-		//}
+		global $pageState;
+		global $myName;
+		
+		if($pageState == "myAppointments"){
+			$dispBuild = "<h1>" . $myName . "'s Appointments</h1>";
+			$dispBuild = $dispBuild . "<p>My Appointments</p>";
+			echo($dispBuild);
+		}
 	}
 	
 	//sets up mail to submit to footprints and sends mail
-	function sendMail(){
+	/*function sendMail(){
 		if(isset($_POST['submit'])){		//if page is receiving a POST submission
 				logWrite();		//logs submission IP address
 		}
@@ -83,7 +104,7 @@
 						
 		/*searches each value of $_POST and finds values that are not required
 		and appends them to the body text as a workspace field*/
-		while(list($key, $val) = each($_POST))
+		/*while(list($key, $val) = each($_POST))
 		{
 			if(!(is_array($val)))
 				$val = $purifier->purify($val);
@@ -161,5 +182,5 @@
 		
 		fwrite($fh, $ip . " - " . strftime('%c') . "\n");	//writes the user's IP address to the log file
 		fclose($fh);				//closes the file
-	}
+	}*/
 ?>
