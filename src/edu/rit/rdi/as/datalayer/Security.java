@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static edu.rit.rdi.as.datalayer.Tables.*;
+
 /**
  * Security provides methods dealing with logging in a user.
  * @date May 1, 2011
@@ -27,7 +29,7 @@ public class Security {
      * @return The identification number of the patient, or -1 if the username/password combination was incorrect.
      */
     public int loginPatient( String username, String password ) throws DataLayerException {
-        String sql = "SELECT patient_id FROM Patient WHERE username = '" + username + "' AND password = '"
+        String sql = "SELECT patient_id FROM " + Patient + " WHERE username = '" + username + "' AND password = '"
                      + password + "'";
         try {
             ResultSet rs = conn.executeQuery( sql );
@@ -54,7 +56,7 @@ public class Security {
      * @return The identification number of the doctor, or -1 if the username/password combination was incorrect.
      */
     public int loginDoctor( String username, String password ) throws DataLayerException {
-        String sql = "SELECT doctor_id FROM Doctor WHERE username = '" + username + "' AND password = '"
+        String sql = "SELECT doctor_id FROM " + Doctor + " WHERE username = '" + username + "' AND password = '"
                      + password + "'";
         try {
             ResultSet rs = conn.executeQuery( sql );
