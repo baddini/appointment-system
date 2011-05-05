@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static edu.rit.rdi.as.datalayer.Tables.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * POJO for Patient table.
@@ -86,6 +84,7 @@ public class Patient extends AbstractDatabasePOJO {
                + "\tusername=" + username + '}';
     }
 
+    @Override
     public boolean put() throws DataLayerException {
         if( fetch() == null ) {
             String sql = "INSERT INTO " + Patient + "(" + asColumns() + ") VALUES ("
@@ -107,6 +106,7 @@ public class Patient extends AbstractDatabasePOJO {
         }
     }
 
+    @Override
     public Object fetch( int primaryKeyId ) throws DataLayerException {
         String sql = "SELECT * FROM " + Patient + " WHERE patient_id = " + primaryKeyId;
         try {
@@ -120,10 +120,12 @@ public class Patient extends AbstractDatabasePOJO {
         return null;
     }
 
+    @Override
     public Object fetch() throws DataLayerException {
         return fetch( patientId );
     }
 
+    @Override
     public boolean post() throws DataLayerException {
         int executeUpdateQuery = -1;
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
@@ -143,6 +145,7 @@ public class Patient extends AbstractDatabasePOJO {
         return true;
     }
 
+    @Override
     public boolean delete() throws DataLayerException {
         //There are no appointments for this patient - we can delete the patient information
         if( new Appointment( patientId ).fetch() == null ) {
@@ -159,6 +162,7 @@ public class Patient extends AbstractDatabasePOJO {
         return false;
     }
 
+    @Override
     public boolean fullDelete() throws DataLayerException {
         //First check if we can just delete this patient outright.
         if( delete() ) {
@@ -180,6 +184,7 @@ public class Patient extends AbstractDatabasePOJO {
         return false;
     }
 
+    @Override
     public HashMap asMap( boolean includePrimaryKey ) {
         HashMap<String, String> map = new HashMap<String, String>();
         if( includePrimaryKey ) {

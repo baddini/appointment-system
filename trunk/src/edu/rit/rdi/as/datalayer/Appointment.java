@@ -82,6 +82,7 @@ public class Appointment extends AbstractDatabasePOJO {
                + "\tduration=" + duration + '}';
     }
 
+    @Override
     public boolean put() throws DataLayerException {
         if( fetch() == null ) {
             String sql = "INSERT INTO " + Appointment + "(" + asColumns() + ") VALUES ("
@@ -101,6 +102,7 @@ public class Appointment extends AbstractDatabasePOJO {
         }
     }
 
+    @Override
     public Object fetch( int primaryKeyId ) throws DataLayerException {
         String sql = "SELECT * FROM " + Appointment + " WHERE appointment_id = " + primaryKeyId;
         try {
@@ -114,6 +116,7 @@ public class Appointment extends AbstractDatabasePOJO {
         return null;
     }
 
+    @Override
     public Object fetch() throws DataLayerException {
         return fetch( appointmentId );
     }
@@ -169,6 +172,7 @@ public class Appointment extends AbstractDatabasePOJO {
         return retrieveAppointments( sql );
     }
 
+    @Override
     public boolean post() throws DataLayerException {
         int executeUpdateQuery = -1;
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
@@ -188,6 +192,7 @@ public class Appointment extends AbstractDatabasePOJO {
         return true;
     }
 
+    @Override
     public boolean delete() throws DataLayerException {
         //There are no children for an appointment, so we can just delete this appointment outright.
         String sql = "DELETE FROM " + Appointment + " WHERE appointment_id = " + appointmentId;
@@ -202,11 +207,13 @@ public class Appointment extends AbstractDatabasePOJO {
         return false;
     }
 
+    @Override
     public boolean fullDelete() throws DataLayerException {
         //Since there are no children for an appointment, we can just run the delete method.
         return delete();
     }
 
+    @Override
     public HashMap asMap( boolean includePrimaryKey ) {
         //Untyped hashmap, since we will be dealing with integers and Strings - easier to cast the information
         //since we know what we are getting
@@ -264,7 +271,11 @@ public class Appointment extends AbstractDatabasePOJO {
             ArrayList<Appointment> appointments = new ArrayList<Appointment>();
             for( ArrayList<String> row : conn.getData( rs ) ) {
                 if( buildThisAppointment( row ) ) {
-                    appointments.add( this );
+                    //Need to create a new object filled with this object's data since we are adding appointments
+                    //to an array by reference: if we add 'this' to the array, and then change 'this' object's
+                    //values, it will change the pre-existing object in the array, thus creating duplicate entries.
+                    Appointment app = new Appointment( appointmentId, doctorId, patientId, date, duration );
+                    appointments.add( app );
                 }
             }
             return appointments;
