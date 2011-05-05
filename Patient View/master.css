@@ -12,3 +12,7 @@ div#main{
 	width: 780px;
     margin: 0 auto 0 auto;
 }
+
+table#loginTable{
+	margin: 200px auto 0 auto;
+}
