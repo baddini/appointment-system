@@ -9,3 +9,15 @@ C:\Users\Dekkar\Documents\School\RIT\2010 03\Remote Data Integration\Project 2\C
 C:\Users\Dekkar\Documents\School\RIT\2010 03\Remote Data Integration\Project 2\Calender System\Calender System\obj\Debug\Calender System.csproj.GenerateResource.Cache
 C:\Users\Dekkar\Documents\School\RIT\2010 03\Remote Data Integration\Project 2\Calender System\Calender System\obj\Debug\Calender System.exe
 C:\Users\Dekkar\Documents\School\RIT\2010 03\Remote Data Integration\Project 2\Calender System\Calender System\obj\Debug\Calender System.pdb
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender System.exe
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender System.pdb
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\bin\Debug\Calender System.exe
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\bin\Debug\Calender System.pdb
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender_System.AddApptView.resources
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender_System.DayPatientView.resources
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender_System.LoginView.resources
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender_System.WeekView.resources
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\Calender_System.Properties.Resources.resources
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\ResGen.read.1.tlog
+C:\Users\Charles Porter\Documents\RIT\Current Courses\Remote Data Integration\appointment-system\DesktopClient\Calender System\Calender System\obj\Debug\ResGen.write.1.tlog
