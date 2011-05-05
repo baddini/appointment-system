@@ -30,6 +30,7 @@ public class DatabaseConnection {
     /**
      * Default static configuration variables
      */
+    //TODO: Figure out a better way to store this crap
     private static final String HOST = "simon.ist.rit.edu:3306";
     private static final String DATABASE = "rdi1";
     private static final String UID = "rdi1";
