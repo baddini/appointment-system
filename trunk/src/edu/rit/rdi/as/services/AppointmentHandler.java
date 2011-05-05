@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static edu.rit.rdi.as.services.messages.Message.ValidTags.*;
+import static edu.rit.rdi.as.utilities.ExceptionUtils.*;
 
 /**
  * Appointment Handler handles calls to the REST Service that hosts the Appointment Request System.
@@ -59,7 +60,7 @@ public class AppointmentHandler {
             }
         } catch( DataLayerException dle ) {
             ret = new ErrorMessage();
-            ret.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            ret.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             ret.setValue( DISPLAY_ERROR, "There was an error trying to log in to the service." );
             return ret;
         }
@@ -98,7 +99,7 @@ public class AppointmentHandler {
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
-            m.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             m.setValue( DISPLAY_ERROR, "There was an error trying to get appointments for the patient." );
         }
         return Collections.singletonList( m );
@@ -135,7 +136,7 @@ public class AppointmentHandler {
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
-            m.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             m.setValue( DISPLAY_ERROR, "There was an error trying to get appointments for the doctor." );
         }
         return Collections.singletonList( m );
@@ -172,7 +173,7 @@ public class AppointmentHandler {
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
-            m.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             m.setValue( DISPLAY_ERROR, "There was an error trying to get appointments for the day." );
         }
         return Collections.singletonList( m );
@@ -210,7 +211,7 @@ public class AppointmentHandler {
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
-            m.setValue( ERROR, dle.getMessage() + "\n" + dle );
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             m.setValue( DISPLAY_ERROR, "There was an error trying to get appointments for the time frame." );
         }
         return Collections.singletonList( m );

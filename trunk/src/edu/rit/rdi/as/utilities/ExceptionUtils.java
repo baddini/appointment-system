@@ -18,7 +18,7 @@ public class ExceptionUtils {
      * @param t Throwable to retrieve its stack trace.
      * @return The stacktrace as a String.
      */
-    private static String stackTraceAsString( Throwable t ) {
+    public static String stackTraceAsString( Throwable t ) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream( baos );
         t.printStackTrace( ps );
