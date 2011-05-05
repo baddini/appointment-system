@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static edu.rit.rdi.as.services.messages.Message.ValidTags.*;
+import static edu.rit.rdi.as.services.messages.Message.ValidTag.*;
 import static edu.rit.rdi.as.utilities.ExceptionUtils.*;
 
 /**

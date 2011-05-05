@@ -16,18 +16,18 @@ public class NullMessage extends AbstractMessage implements Serializable {
     }
 
     @Override
-    public String getValue( ValidTags tag ) {
+    public String getValue( ValidTag tag ) {
         return new String();
     }
 
     @Override
-    public void setValue( ValidTags tag, String value ) {
+    public void setValue( ValidTag tag, String value ) {
         //Does not do anything
     }
 
     @Override
-    public EnumMap<ValidTags, String> getValues() {
-        return new EnumMap<ValidTags, String>( ValidTags.class );
+    public EnumMap<ValidTag, String> getValues() {
+        return new EnumMap<ValidTag, String>( ValidTag.class );
     }
 
     @Override

@@ -15,20 +15,20 @@ public interface Message {
      * @param tag The tag we are looking for in this message.
      * @return The value of the tag, or null if the tag doesn't exist.
      */
-    public String getValue( ValidTags tag );
+    public String getValue( ValidTag tag );
 
     /**
      * Puts a tag and its value into the message.
      * @param tag The tag to store in the message.
      * @param value The tag's value.
      */
-    public void setValue( ValidTags tag, String value );
+    public void setValue( ValidTag tag, String value );
 
     /**
      * Returns all tag/value pairs that are contained in this message.
      * @return The tag-to-value mapping.
      */
-    public EnumMap<ValidTags, String> getValues();
+    public EnumMap<ValidTag, String> getValues();
 
     /**
      * Serializes the Message object into a String.
@@ -43,7 +43,7 @@ public interface Message {
     /**
      * Enum for valid tags to be placed in a Message object.
      */
-    public enum ValidTags {
+    public enum ValidTag {
         /**
          * Doctor tag. Used for categorizing information about a doctor.
          */
