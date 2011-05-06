@@ -15,8 +15,6 @@ namespace Calender_System
 {
     public partial class LoginView : Form
     {
-        private String baseURI = "http://simon.ist.rit.edu:8080/BeerService/resources/Services/Beers/";
-        
         public LoginView()
         {
             InitializeComponent();
@@ -24,47 +22,22 @@ namespace Calender_System
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            ServiceMethod("GET", baseURI + "Costliest");
-        }
-
-        //Find the cheapest beer
-        void ServiceMethod(String methodType, String uri)
-        {
-            try
+            String responseString = Program.ServiceMethod("GET", Program.baseURI_AS + "Login?username=" + txtName.Text + "&password=" + txtPass.Text);
+            //ServiceMethod returns 'ERROR' on critical failure (service being down)
+            if (responseString.Equals("ERROR"))
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-                request.Method = methodType;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                txtName.Text = ConvertResponse(response);
-                txtPass.Text = "";
+                lblError.Text = "Service is down.";
             }
-            catch (Exception)
+            //Service returns an empty string if credentials are wrong
+            else if (responseString.Equals(""))
             {
-                txtName.Text = "ERROR: Could not connect to service.";
-                txtPass.Text = "";
+                lblError.Text = "Invalid credentials.";
             }
-        }
-
-        //Converts xml of response stream into string 
-        String ConvertResponse(HttpWebResponse response)
-        {
-            String outputString = "";
-            String result = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            using (XmlReader reader = XmlReader.Create(new StringReader(result)))
+            //Valid credentials, store responce, pass on over to the menu...
+            else
             {
-                XmlWriterSettings ws = new XmlWriterSettings();
-                // Parse the file and display each of the nodes.
-                while (reader.Read())
-                {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Text:
-                            outputString += reader.Value + "\n";
-                            break;
-                    }
-                }
+                lblError.Text = responseString;//PLACEHOLDER*********************************************************
             }
-            return outputString;
         }
     }
 }
