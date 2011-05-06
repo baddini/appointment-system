@@ -34,12 +34,13 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.lblPass = new System.Windows.Forms.Label();
+            this.lblError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtName
             // 
             this.txtName.Location = new System.Drawing.Point(133, 86);
-            this.txtName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtName.Margin = new System.Windows.Forms.Padding(4);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(148, 22);
             this.txtName.TabIndex = 0;
@@ -47,7 +48,7 @@
             // txtPass
             // 
             this.txtPass.Location = new System.Drawing.Point(133, 123);
-            this.txtPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPass.Margin = new System.Windows.Forms.Padding(4);
             this.txtPass.Name = "txtPass";
             this.txtPass.PasswordChar = '*';
             this.txtPass.Size = new System.Drawing.Size(148, 22);
@@ -56,7 +57,7 @@
             // btnLogin
             // 
             this.btnLogin.Location = new System.Drawing.Point(100, 209);
-            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(4);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(133, 47);
             this.btnLogin.TabIndex = 2;
@@ -95,18 +96,27 @@
             this.lblPass.TabIndex = 5;
             this.lblPass.Text = "Password:";
             // 
+            // lblError
+            // 
+            this.lblError.ForeColor = System.Drawing.Color.Firebrick;
+            this.lblError.Location = new System.Drawing.Point(40, 162);
+            this.lblError.Name = "lblError";
+            this.lblError.Size = new System.Drawing.Size(241, 43);
+            this.lblError.TabIndex = 6;
+            // 
             // LoginView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(312, 261);
+            this.Controls.Add(this.lblError);
             this.Controls.Add(this.lblPass);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtPass);
             this.Controls.Add(this.txtName);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LoginView";
             this.Text = "Login";
             this.ResumeLayout(false);
@@ -122,5 +132,6 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblPass;
+        private System.Windows.Forms.Label lblError;
     }
 }
