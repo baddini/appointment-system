@@ -111,7 +111,7 @@ public class AppointmentService {
     @Consumes( "text/plain" )
     @Path( "DeleteAppointment" )
     public String deleteAppointment( @QueryParam( "appointment" ) String appointmentString ) {
-        return null;
+        return handler.deleteAppointment( appointmentString ).serialize();
     }
 
     /**

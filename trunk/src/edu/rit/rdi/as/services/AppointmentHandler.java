@@ -268,17 +268,41 @@ public class AppointmentHandler {
     }
 
     /**
-     * Deletes an appointment.
+     * Delete an appointment.
      * @param appointmentString Information string for an appointment. This string must be formatted like:
-     *                          ORIGINAL:Doctor_name,Patient_fName,Patient_lName,time|NEW:Doctor_name=[name]...
-     * @return A {@link Message} that represents whether this change was successful or not. {@link NullMessage} will
-     *         be passed back if there are no appointments found for the given doctor and patient, or if the appointment
-     *         is for a different patient/doctor. {@link ErrorMessage} will be passed back if an error occurred.
-     *         A valid {@link ServiceMessage} will have the following tags with the deleted appointment information
-     *         filled in: "DOCTOR NAME", "PATIENT NAME", "TIME"
+     *                          <code>Doctor_id,Patient_id,time</code>.
+     * @return A {@link Message} that represents whether this delete was successful or not.
+     *         <br/>{@link NullMessage} will be passed back if there are no appointments found for the given
+     *         doctor and patient, or if the delete was unsuccessful.
+     *         <br/>{@link ErrorMessage} will be passed back if an error occurred.
+     *         <br/>A valid {@link ServiceMessage} will have an Appointment tag with the deleted information filled in:
+     *         "APPOINTMENT_ID,PATIENT_ID,DOCTOR_ID,Year-Day-Month Hours:Minutes:Seconds,duration"
      */
     public Message deleteAppointment( String appointmentString ) {
-        return null;
+        Message m = null;
+
+        try {
+            //Get the appointment to delete
+            Appointment toDelete = parseAppointment( appointmentString, false );
+            //Update the old appointment's values with the new appointment's values.
+            boolean success = toDelete.delete();
+            if( success ) {
+                m = new ServiceMessage();
+                m.setValue( APPOINTMENT, toDelete.getAppointmentId()
+                                         + "," + toDelete.getPatientId()
+                                         + "," + toDelete.getDoctorId()
+                                         + "," + toDelete.getDate()
+                                         + "," + toDelete.getDuration() );
+            } else {
+                m = new NullMessage();
+            }
+        } catch( DataLayerException dle ) {
+            m = new ErrorMessage();
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to update an appointment's information." );
+        }
+
+        return m;
     }
 
     /**
