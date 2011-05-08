@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -42,6 +41,7 @@ public class DatabaseConnection {
     private String database = DATABASE;
     private String uid = UID;
     private String password = PASS;
+    private String url;
     /**
      * Connection object
      */
@@ -86,7 +86,6 @@ public class DatabaseConnection {
      * Constructor to specify database location
      */
     private DatabaseConnection( Properties props ) {
-        String url = "";
         if( props.containsKey( "host" ) )
             host = props.getProperty( "host" );
 
@@ -106,6 +105,17 @@ public class DatabaseConnection {
 
 
         connect( DRIVER, url, uid, password );
+    }
+
+    /**
+     * Since it's possible for a connection to the MySQL database to be closed or severed, we need to make sure
+     * we are not running any operations on a stale/dead connection. Therefore, we have to re-open the connection
+     * if it is closed.
+     */
+    private synchronized void validateConnection() throws SQLException {
+        if( !isOpen() ) {
+            connect( DRIVER, url, uid, password );
+        }
     }
 
     /**
@@ -158,6 +168,7 @@ public class DatabaseConnection {
      *            a commit will be performed, followed by autoCommit being turned back on.
      */
     public void setAutoCommit( boolean on ) throws SQLException {
+        validateConnection();
         if( on ) {
             connect.commit();
         }
@@ -169,6 +180,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public void rollback() throws SQLException {
+        validateConnection();
         connect.rollback();
     }
 
@@ -178,6 +190,7 @@ public class DatabaseConnection {
      * @throws java.sql.SQLException
      */
     public void executeNonQuery( String query ) throws SQLException {
+        validateConnection();
         Statement st = connect.createStatement();
         st.execute( query );
     }
@@ -189,6 +202,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public int executeUpdateQuery( String query ) throws SQLException {
+        validateConnection();
         Statement st = connect.createStatement();
         return st.executeUpdate( query );
     }
@@ -200,6 +214,7 @@ public class DatabaseConnection {
      * @throws java.sql.SQLException
      */
     public ResultSet executeQuery( String query ) throws SQLException {
+        validateConnection();
         Statement st = connect.createStatement();
         ResultSet rs = st.executeQuery( query );
         return rs;
@@ -212,6 +227,7 @@ public class DatabaseConnection {
      * @throws java.sql.SQLException
      */
     public PreparedStatement newPreparedStatement( String query ) throws SQLException {
+        validateConnection();
         return connect.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
     }
 
@@ -223,6 +239,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public PreparedStatement buildStmnt( String stmnt, Object... objs ) throws SQLException {
+        validateConnection();
         PreparedStatement ret = newPreparedStatement( stmnt );
         if( objs.length < 1 || objs == null ) {
             return ret;
@@ -243,6 +260,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public ArrayList<ArrayList<String>> getData( ResultSet rs, boolean columns ) throws SQLException {
+        validateConnection();
         ResultSetMetaData rsmd = rs.getMetaData();
         ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
         ArrayList<String> temp = new ArrayList<String>();
@@ -264,6 +282,7 @@ public class DatabaseConnection {
     }
 
     public ArrayList<ArrayList<String>> getData( ResultSet rs ) throws SQLException {
+        validateConnection();
         return getData( rs, false );
     }
 
@@ -278,6 +297,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public ArrayList<ArrayList<String>> getData( ResultSet rs, String column ) throws SQLException {
+        validateConnection();
         ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
         ArrayList<String> tempRow = new ArrayList<String>();
         while( rs.next() ) {
@@ -294,6 +314,7 @@ public class DatabaseConnection {
      * @throws SQLException
      */
     public ArrayList<String> getSingleRow( ResultSet rs ) throws SQLException {
+        validateConnection();
         ArrayList<String> ret = new ArrayList<String>();
         //Set ResultSet cursor to first and only row.
         if( rs.next() ) {
