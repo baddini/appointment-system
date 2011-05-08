@@ -54,6 +54,10 @@ public class Appointment extends AbstractDatabasePOJO {
         this.duration = duration;
     }
 
+    public void setAppointmentId( int appointmentId ) {
+        this.appointmentId = appointmentId;
+    }
+
     public int getAppointmentId() {
         return appointmentId;
     }
