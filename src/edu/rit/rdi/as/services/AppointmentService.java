@@ -100,7 +100,7 @@ public class AppointmentService {
     @Consumes( "text/plain" )
     @Path( "ChangeAppointment" )
     public String changeAppointment( @QueryParam( "appointment" ) String appointmentString ) {
-        return null;
+        return handler.changeAppointment( appointmentString ).serialize();
     }
 
     /**
