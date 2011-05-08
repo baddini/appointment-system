@@ -10,13 +10,14 @@ import java.util.EnumMap;
 public abstract class AbstractMessage implements Message {
 
     private static final String TAG_TO_VAL_DELIM = "=>";
-    private static final String TAG_DELIM = "|";
+    public static final String TAG_DELIM = "|";
     protected EnumMap<ValidTag, String> tagsToValues;
 
     public AbstractMessage() {
         tagsToValues = new EnumMap<ValidTag, String>( ValidTag.class );
     }
 
+    @Override
     public String getValue( ValidTag tag ) {
         if( tagsToValues.containsKey( tag ) ) {
             return tagsToValues.get( tag );
@@ -24,14 +25,17 @@ public abstract class AbstractMessage implements Message {
         return null;
     }
 
+    @Override
     public void setValue( ValidTag tag, String value ) {
         tagsToValues.put( tag, value );
     }
 
+    @Override
     public EnumMap<ValidTag, String> getValues() {
         return tagsToValues;
     }
 
+    @Override
     public String serialize() {
         StringBuilder build = new StringBuilder();
         for( ValidTag tag : tagsToValues.keySet() ) {
