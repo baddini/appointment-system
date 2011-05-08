@@ -36,13 +36,6 @@ public class Appointment extends AbstractDatabasePOJO {
         this.duration = duration;
     }
 
-    public Appointment( int appointmentId, int doctorId, int patientId ) {
-        this();
-        this.appointmentId = appointmentId;
-        this.doctorId = doctorId;
-        this.patientId = patientId;
-    }
-
     public Appointment( int patientId ) {
         this();
         this.patientId = patientId;
@@ -51,6 +44,14 @@ public class Appointment extends AbstractDatabasePOJO {
     public Appointment( int doctorId, String garbage ) {
         this();
         this.doctorId = doctorId;
+    }
+
+    public Appointment( int doctorId, int patientId, String date, int duration ) {
+        this();
+        this.doctorId = doctorId;
+        this.patientId = patientId;
+        this.date = date;
+        this.duration = duration;
     }
 
     public int getAppointmentId() {
@@ -170,6 +171,21 @@ public class Appointment extends AbstractDatabasePOJO {
         String sql = "SELECT * FROM " + Appointment + " WHERE CAST(date AS DATE) "
                      + "BETWEEN '" + startTime + "'% AND '" + endTime + "%'";
         return retrieveAppointments( sql );
+    }
+
+    /**
+     * Fetches a single appointment. This is retrieved by using the patient id, the doctor id, and the time of the
+     * appointment. This should only fetch a single appointment because it is using very specific information.
+     * @param patientId The patient's identification number who has the appointment.
+     * @param doctorId The doctor's identification number who is administering the appointment.
+     * @param day The exact day and time of the appointment.
+     * @return The {@link Appointment} object that represents this information.
+     * @throws DataLayerException
+     */
+    public Appointment fetchBySpecific( int patientId, int doctorId, String day ) throws DataLayerException {
+        String sql = "SELECT * FROM " + Appointment + " WHERE doctor_id = " + doctorId
+                     + " AND patient_id = " + patientId + " AND date LIKE '" + day + "%'";
+        return retrieveAppointments( sql ).get( 0 );
     }
 
     @Override
