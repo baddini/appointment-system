@@ -8,6 +8,7 @@
 	Charles Porter
 	Alexander Miner
 ****************/
+	ini_set('allow_url_fopen', 'on');
 	
 	$basePath = "http://simon.ist.rit.edu:8080/AppointmentSystem/resources/appointmentservice/";
 	$errorMessage;
@@ -39,6 +40,7 @@
 		//remove this line after implementation
 		$doctorName = "Doctor Dude";
 		$errorMessage = "";
+		//$errorMessage = file_get_contents("http://simon.ist.rit.edu:8080/AppointmentSystem/resources/appointmentservice/PatientAppointments?patientId=1");
 		
 		if(!(isset($_POST['pageState']))){		//if page is receiving a POST submission
 			$pageState = "Log Out";
@@ -53,6 +55,7 @@
 		global $controlState;
 		global $myName;
 		global $errorMessage;
+		global $myKey;
 		
 		if(isset($_POST['pageState'])){		//if page is receiving a POST submission
 			if(($_POST['pageState']) == "Log In"){	//if attempting to log in
@@ -76,21 +79,50 @@
 				$pageState = "My Appointments";
 				$controlState = "Logged in";	
 				$myName = "Test Name";
+				
+				$url = $basePath . "PatientAppointments?patientId=" . $myKey;
+				$res = file_get_contents($url);
+				if($res != null){
+					//build display for my appointments
+					//include button to delete or change an appointment
+				}
+				else{
+					$errorMessage = "No appointments found.";
+				}
 			}
 			else if(($_POST['pageState']) == "New Appointment"){
 				$pageState = "New Appointment";
 				$controlState = "Logged in";	
 				$myName = "Test Name";
+				
+				//add form controls to add an appointment
 			}
 			else if(($_POST['pageState']) == "Day View"){
 				$pageState = "Day View";
 				$controlState = "Logged in";	
 				$myName = "Test Name";
+				
+				//$url = $basePath . "DayAppointments?timeframe=" . $;
+				//$res = file_get_contents($url);
+				if($res != null){
+					//build display for this day
+				}
+				else{
+					$errorMessage = "No appointments found.";
+				}
 			}
 			else if(($_POST['pageState']) == "Week View"){
 				$pageState = "Week View";
 				$controlState = "Logged in";	
 				$myName = "Test Name";
+				
+				//$url = $basePath . "TimespanAppointments?startTime=" . $ . "&endTime=" . $;
+				//$res = file_get_contents($url);
+				if($res != null){
+					//build display for this week
+				}
+				else{
+					$errorMessage = "No appointments found.";
 			}
 		}
 	}
@@ -190,85 +222,8 @@
 		echo($dispBuild);
 	}
 	
-	//sets up mail to submit to footprints and sends mail
-	/*function sendMail(){
-		if(isset($_POST['submit'])){		//if page is receiving a POST submission
-				logWrite();		//logs submission IP address
-		}
-		//Sets from, to, subject, and body text of email
-		$mail = new Zend_Mail();
-		$mail->setFrom($purifier->purify($_POST['from']));
-		$mail->addTo($purifier->purify($_POST['to']));
-		//$mail->addTo("swwdss@rit.edu");
-		$mail->setSubject($purifier->purify($_POST['subject']));
-		
-		$messageText = $purifier->purify($_POST['message']) . "\n";
-
-		//create the body for the mail
-			reset($_POST);
-						
-		/*searches each value of $_POST and finds values that are not required
-		and appends them to the body text as a workspace field*/
-		/*while(list($key, $val) = each($_POST))
-		{
-			if(!(is_array($val)))
-				$val = $purifier->purify($val);
-			
-			//determines if value is a required field or not; removes validate field
-			if($key != "to" && $key != "from" && $key != "subject" && $key != "message" && $key != "submit" && $key != "validate")
-			{
-				//detemines if a field is blank
-				if($val != "")
-				{
-					//determines whether or not the field is an array
-					if(is_array($val))
-					{
-						//enters the array inside of the POST array
-						while(list($subKey, $subVal) = each($val))
-						{							
-							//formats for the first line of multiple data for a workspace field
-							if($subKey == 0)
-								$messageText = $messageText . "\n" . $key . '=' . $subVal;
-							//for each datum after the first
-							else
-								$messageText = $messageText . "\n" . $subVal;
-						}
-						//end the workspace field
-						$messageText = $messageText . "\nEND " . $key;
-					}
-					//if the field is not an array
-					else
-					{
-						$messageText = $messageText . "\n" . $key . '=' . $val . "\nEND " . $key;
-					}
-				}
-			}
-		}
-		
-		$mail->setBodyText($messageText);
-		
-		
-		//counts the number of attachments, uploades them and attaches them to the email
-		for($i=1;$i<=count($_FILES);$i++){
-			$target = "upload/"; 
-			$target = $target . basename( $purifier->purify($_FILES['at'.$i]['name'])) ;
-			echo $target;
-			if(move_uploaded_file($_FILES['at'.$i]['tmp_name'], $target)) { 
-				echo "The file ". basename( $_FILES['at'.$i]['name']). " has been uploaded. "; 
-				$fileContents = file_get_contents($target);
-				$attach = $mail->createAttachment($fileContents);
-				$attach->filename = $_FILES['at'.$i]['name'];;
-			}
-		}
-		
-		//send the email
-		if(!mailSender($mail)){
-			alert("An error occured while submitting your request. Please reload the form and try again.");
-		}
-	}
-	
 	//logs IP address and date upon submission
-	function logWrite(){
+	/*function logWrite(){
 		$logFile = "log/log.txt"; //opens the log file
 		$fh = fopen($logFile, 'a') or die("Log file not found"); //sets up the file handler to append
 		
