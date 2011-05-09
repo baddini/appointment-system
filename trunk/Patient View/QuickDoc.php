@@ -42,7 +42,11 @@ QuickDoc.php
 			<!--input type = "text" name = "validate" id = "validate" size = "15" value = "" style = "display:none;"-->
 		</form>
 		<div id = "errorMessage">
-			<p class = "errorMessage"></p>
+			<p class = "errorMessage">
+			<?php
+				echo($errorMessage);
+			?>
+			</p>
 		</div>
 	</div>
 		
