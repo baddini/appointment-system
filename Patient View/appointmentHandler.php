@@ -62,7 +62,14 @@
 				//set path to call Login method with username and password
 				$url = $basePath . "Login?username=" . ($_POST['login_name']) . "&password=" . ($_POST['login_pass']);
 				$res = file_get_contents($url);
+				/*$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+				$res = curl_exec($ch);
+				curl_close($ch);*/
+				
 				if($res != null){
+				//if($res != false){
 					//if the credentials are accepted
 					$pageState = "My Appointments";
 					$controlState = "Logged in";	
