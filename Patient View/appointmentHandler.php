@@ -8,7 +8,9 @@
 	Charles Porter
 	Alexander Miner
 ****************/
-
+	
+	$basePath = "http://simon.ist.rit.edu:8080/AppointmentSystem/resources/appointmentservice/";
+	$errorMessage;
 	$pageState;			//holds state of page to display
 	/*	Possible page states:
 	*	Log Out - display login dialogue
@@ -32,9 +34,11 @@
 		global $pageState;
 		global $controlState;
 		global $doctorName;
+		global $errorMessage;
 		
 		//remove this line after implementation
 		$doctorName = "Doctor Dude";
+		$errorMessage = "";
 		
 		if(!(isset($_POST['pageState']))){		//if page is receiving a POST submission
 			$pageState = "Log Out";
@@ -44,18 +48,29 @@
 	
 	//updates the page
 	function updatePage(){
+		global $basePath;
 		global $pageState;
 		global $controlState;
 		global $myName;
+		global $errorMessage;
 		
 		if(isset($_POST['pageState'])){		//if page is receiving a POST submission
 			if(($_POST['pageState']) == "Log In"){	//if attempting to log in
-				//if login fails, display error field, echo error message
-				
-				//else, set pageState to home page (my appointments view)
-				$pageState = "My Appointments";
-				$controlState = "Logged in";	
-				$myName = "Test Name";
+				//set path to call Login method with username and password
+				$url = $basePath . "Login?username=" . ($_POST['login_name']) . "&password=" . ($_POST['login_pass']);
+				$res = file_get_contents($url);
+				if($res != null){
+					//if the credentials are accepted
+					$pageState = "My Appointments";
+					$controlState = "Logged in";	
+					$myName = "Test Name";
+					$myKey = $res;
+				}
+				else{
+					$errorMessage = "Incorrect login." . " Res = " . $res . " query: " . $url;
+					$pageState = "Log Out";
+					$controlState = "login";
+				}
 			}
 			else if(($_POST['pageState']) == "My Appointments"){
 				$pageState = "My Appointments";
