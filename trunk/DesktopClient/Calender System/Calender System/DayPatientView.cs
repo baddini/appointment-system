@@ -16,12 +16,7 @@ namespace Calender_System
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DayPatientView_Load(object sender, EventArgs e)
+        private void btnBack_Click(object sender, EventArgs e)
         {
 
         }

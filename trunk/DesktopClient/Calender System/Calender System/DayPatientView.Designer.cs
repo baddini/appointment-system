@@ -42,7 +42,6 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Appointments for ";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTitle.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnBack
             // 
@@ -52,6 +51,7 @@
             this.btnBack.TabIndex = 1;
             this.btnBack.Text = "Return To Menu";
             this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // lblApt
             // 
@@ -71,7 +71,6 @@
             this.Controls.Add(this.lblTitle);
             this.Name = "DayPatientView";
             this.Text = "Appointment View";
-            this.Load += new System.EventHandler(this.DayPatientView_Load);
             this.ResumeLayout(false);
 
         }
