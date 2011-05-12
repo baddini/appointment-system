@@ -36,7 +36,8 @@ namespace Calender_System
             //Valid credentials, store responce, pass on over to the menu...
             else
             {
-                lblError.Text = responseString;//PLACEHOLDER*********************************************************
+                this.Hide();//Just hides the window, doesn't actually close it
+                new WeekView(responseString);
             }
         }
     }
