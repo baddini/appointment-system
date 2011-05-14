@@ -181,13 +181,19 @@ public class Appointment extends AbstractDatabasePOJO {
      * @param patientId The patient's identification number who has the appointment.
      * @param doctorId The doctor's identification number who is administering the appointment.
      * @param day The exact day and time of the appointment.
-     * @return The {@link Appointment} object that represents this information.
+     * @return The {@link Appointment} object that represents this information, or <code>null</code> if no appointment
+     *         was found.
      * @throws DataLayerException
      */
     public Appointment fetchBySpecific( int patientId, int doctorId, String day ) throws DataLayerException {
         String sql = "SELECT * FROM " + Appointment + " WHERE doctor_id = " + doctorId
                      + " AND patient_id = " + patientId + " AND date LIKE '" + day + "%'";
-        return retrieveAppointments( sql ).get( 0 );
+        List<Appointment> appointments = retrieveAppointments( sql );
+        if( appointments.isEmpty() ) {
+            return null;
+        } else {
+            return retrieveAppointments( sql ).get( 0 );
+        }
     }
 
     @Override

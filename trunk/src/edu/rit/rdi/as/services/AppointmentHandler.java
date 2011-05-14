@@ -79,12 +79,12 @@ public class AppointmentHandler {
      *         {@link Patient}. A {@link ErrorMessage} will be returned if the fetch produced an exception.
      */
     public Message getPatientName( int patientId ) {
-        Message m = null;
+        Message m = new NullMessage();
         try {
             Patient patient = new Patient( patientId );
             patient = (Patient) patient.fetch();
             if( patient == null ) {
-                m = new NullMessage();
+                return m;
             } else {
                 m = new ServiceMessage();
                 m.setValue( PATIENT, patient.getLastName() + ", " + patient.getFirstName() );
@@ -107,12 +107,12 @@ public class AppointmentHandler {
      *         {@link Doctor}. A {@link ErrorMessage} will be returned if the fetch produced an exception.
      */
     public Message getDoctorName( int doctorId ) {
-        Message m = null;
+        Message m = new NullMessage();
         try {
             Doctor doctor = new Doctor( doctorId );
             doctor = (Doctor) doctor.fetch();
             if( doctor == null ) {
-                m = new NullMessage();
+                return m;
             } else {
                 m = new ServiceMessage();
                 m.setValue( DOCTOR, doctor.getLastName() + ", " + doctor.getFirstName() );
@@ -290,17 +290,20 @@ public class AppointmentHandler {
      *         "APPOINTMENT_ID,PATIENT_ID,DOCTOR_ID,Year-Day-Month Hours:Minutes:Seconds,duration"
      */
     public Message changeAppointment( String appointmentString ) {
-        Message m = null;
+        Message m = new NullMessage();
         //Split the parameter into OLD and NEW appointment strings.
         String[] split = appointmentString.split( AbstractMessage.TAG_DELIM );
         if( split.length > 2 ) {
-            m = new NullMessage();
+            return m;
         } else {
             try {
                 //Get the OLD appointment
                 Appointment oldAppointment = parseAppointment( split[0], false );
                 //Get NEW appointment values
                 Appointment newAppointment = parseAppointment( split[1], true );
+                if( oldAppointment == null || newAppointment == null ) {
+                    return m;
+                }
                 //Set the new appointment's id number to the same as the old appointment.
                 newAppointment.setAppointmentId( oldAppointment.getAppointmentId() );
                 //Update the old appointment's values with the new appointment's values.
@@ -313,7 +316,7 @@ public class AppointmentHandler {
                                              + "," + newAppointment.getDate()
                                              + "," + newAppointment.getDuration() );
                 } else {
-                    m = new NullMessage();
+                    return m;
                 }
             } catch( DataLayerException dle ) {
                 m = new ErrorMessage();
@@ -336,11 +339,14 @@ public class AppointmentHandler {
      *         "APPOINTMENT_ID,PATIENT_ID,DOCTOR_ID,Year-Day-Month Hours:Minutes:Seconds,duration"
      */
     public Message deleteAppointment( String appointmentString ) {
-        Message m = null;
+        Message m = new NullMessage();
 
         try {
             //Get the appointment to delete
             Appointment toDelete = parseAppointment( appointmentString, false );
+            if( toDelete == null ) {
+                return m;
+            }
             boolean success = toDelete.delete();
             if( success ) {
                 m = new ServiceMessage();
@@ -350,12 +356,12 @@ public class AppointmentHandler {
                                          + "," + toDelete.getDate()
                                          + "," + toDelete.getDuration() );
             } else {
-                m = new NullMessage();
+                return m;
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
             m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
-            m.setValue( DISPLAY_ERROR, "There was an error trying to update an appointment's information." );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to delete an appointment." );
         }
 
         return m;
@@ -372,10 +378,12 @@ public class AppointmentHandler {
      *         "APPOINTMENT_ID,PATIENT_ID,DOCTOR_ID,Year-Day-Month Hours:Minutes:Seconds,duration"
      */
     public Message addAppointment( String appointmentString ) {
-        Message m = null;
-
+        Message m = new NullMessage();
         try {
             Appointment appointment = parseAppointment( appointmentString, true );
+            if( appointment == null ) {
+                return m;
+            }
             boolean success = appointment.put();
             if( success ) {
                 m = new ServiceMessage();
@@ -385,12 +393,12 @@ public class AppointmentHandler {
                                          + "," + appointment.getDate()
                                          + "," + appointment.getDuration() );
             } else {
-                m = new NullMessage();
+                return m;
             }
         } catch( DataLayerException dle ) {
             m = new ErrorMessage();
             m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
-            m.setValue( DISPLAY_ERROR, "There was an error trying to update an appointment's information." );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to add an appointment's information." );
         }
         return m;
     }
