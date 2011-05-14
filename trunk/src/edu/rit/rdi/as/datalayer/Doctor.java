@@ -222,13 +222,12 @@ public class Doctor extends AbstractDatabasePOJO {
             //Since the data we received is invalid, we should return false.
             return false;
         }
-        this.firstName = data.get( 1 );
-        this.lastName = data.get( 2 );
-        this.gender = data.get( 3 );
-        this.email = data.get( 4 );
-        this.phone = data.get( 5 );
-        this.username = data.get( 6 );
-
+        this.username = data.get( 1 );
+        this.firstName = data.get( 2 );
+        this.lastName = data.get( 3 );
+        this.gender = data.get( 4 );
+        this.email = data.get( 5 );
+        this.phone = data.get( 6 );
         return true;
     }
 }
