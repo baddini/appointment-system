@@ -79,11 +79,6 @@ var rjsSupport = {
             return null;
         }
         try {
-            netscape.security.PrivilegeManager.enablePrivilege ("UniversalBrowserRead");
-        } catch (e) {
-            //this.debug("Permission UniversalBrowserRead denied.");
-        }
-        try {
             xmlHttpReq.open(method, url, async);
         } catch( e ) {
             this.debug('Error: XMLHttpRequest.open failed for: '+url+' Error name: '+e.name+' Error message: '+e.message);
@@ -157,60 +152,6 @@ var rjsSupport = {
         return '-1';
     },
 
-    post : function(url, mime, content) {
-        var xmlHttpReq = this.open('POST', url, mime, content.length, false);
-        try {
-            xmlHttpReq.send(content);
-            if (xmlHttpReq.readyState == 4) {
-                var status = xmlHttpReq.status;
-                if(status == 201) {
-                    return true;
-                } else {
-                    this.debug('Failed XHR(POST, '+url+'): Server returned --> ' + status);
-                }
-            }
-        } catch( e ) {
-          this.debug('Caught Exception; name: [' + e.name + '] message: [' + e.message+']');
-        }
-        return false;
-    },
-
-    put : function(url, mime, content) {
-        var xmlHttpReq = this.open('PUT', url, mime, content.length, false);
-        try {
-          xmlHttpReq.send(content);
-          if (xmlHttpReq.readyState == 4) {
-              var status = xmlHttpReq.status;
-              if(status == 204) {
-                  return true;
-              } else {
-                  this.debug('Failed XHR(PUT, '+url+'): Server returned --> ' + status);
-              }
-          }
-        } catch( e ) {
-          this.debug('Caught Exception; name: [' + e.name + '] message: [' + e.message+']');
-        }
-        return false;
-    },
-
-    delete_ : function(url) {
-        var xmlHttpReq = this.open('DELETE', url, 'application/xml', 0, false);
-        try {
-          xmlHttpReq.send(null);
-          if (xmlHttpReq.readyState == 4) {
-              var status = xmlHttpReq.status;
-              if(status == 204) {
-                  return true;
-              } else {
-                  this.debug('Failed XHR(DELETE, '+url+'): Server returned --> ' + status);
-              }
-          }
-        } catch( e ) {
-          this.debug('Caught Exception; name: [' + e.name + '] message: [' + e.message+']');
-        }
-        return false;
-    },
-
     debug : function(message) {
         var dbgComp = document.getElementById("dbgComp");
         if(dbgComp == null) {
@@ -222,11 +163,6 @@ var rjsSupport = {
             document.getElementsByTagName("body")[0].appendChild(br);
             br.innerHTML = '<br/><br/><br/>';
             document.getElementsByTagName("body")[0].appendChild(dbgComp);
-            if((typeof rjsConfig!="undefined") && rjsConfig.isDebug) {
-                dbgComp.style.display = "";
-            } else {
-                dbgComp.style.display = "none";
-            }
             var tab = 'width: 20px; border-right: #2574B7 1px solid; border-top: #2574B7 1px solid; border-left: #2574B7 1px solid; border-bottom: #2574B7 1px solid; color: #000000; text-align: center;';
             var addActionStr = '<div style="'+tab+'"><a style="text-decoration: none" href="javascript:rjsSupport.closeDebug()"><span style="color: red">X</span></a></div>';        
             dbgComp.innerHTML = '<table><tr><td><span style="color: blue">Rest Debug Window</span></td><td>'+addActionStr + '</td></tr></table><br/>';
