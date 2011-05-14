@@ -1,6 +1,7 @@
 package edu.rit.rdi.as.services;
 
 import edu.rit.rdi.as.datalayer.Appointment;
+import edu.rit.rdi.as.datalayer.Patient;
 import edu.rit.rdi.as.datalayer.Security;
 import edu.rit.rdi.as.exceptions.DataLayerException;
 import edu.rit.rdi.as.services.messages.AbstractMessage;
@@ -67,6 +68,34 @@ public class AppointmentHandler {
         }
 
         return ret;
+    }
+
+    /**
+     * Gets a patient's first and last name based on their unique identification number.
+     * @param patientId The {@link Patient}'s identification number.
+     * @return A {@link Message} that represents whether the fetch was successful. A successful fetch will return
+     *         a {@link ServiceMessage} with a tag of "PATIENT" and the value will be formatted like:
+     *         "LastName, FirstName." A {@link NullMessage} will be returned if the fetch did not return a
+     *         {@link Patient}. A {@link ErrorMessage} will be returned if the fetch produced an exception.
+     */
+    public Message getPatientName( int patientId ) {
+        Message ret = new NullMessage();
+        try {
+            Patient patient = new Patient( patientId );
+            patient = (Patient) patient.fetch();
+            if( patient == null ) {
+                return ret;
+            }
+
+            ret = new ServiceMessage();
+            ret.setValue( PATIENT, patient.getLastName() + ", " + patient.getFirstName() );
+            return ret;
+        } catch( DataLayerException dle ) {
+            ret = new ErrorMessage();
+            ret.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            ret.setValue( DISPLAY_ERROR, "There was an error trying to get the patient's name." );
+            return ret;
+        }
     }
 
     /**
