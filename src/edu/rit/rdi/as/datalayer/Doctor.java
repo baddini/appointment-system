@@ -89,23 +89,21 @@ public class Doctor extends AbstractDatabasePOJO {
     @Override
     public boolean put() throws DataLayerException {
         if( fetch() == null ) {
-            String sql = "INSERT INTO " + Doctor + "(" + asColumns() + ") VALUES ("
-                         + doctorId + ","
-                         + firstName + ","
-                         + lastName + ","
-                         + gender + ","
-                         + email + ","
-                         + phone + ","
-                         + username + "," + ")";
+            String sql = "INSERT INTO " + Doctor + "(" + asInsertColumns() + ") VALUES ("
+                         + "'" + firstName + "',"
+                         + "'" + lastName + "',"
+                         + "'" + gender + "',"
+                         + "'" + email + "',"
+                         + "'" + phone + "',"
+                         + "'" + username + "'," + ")";
             try {
                 conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
                 throw new DataLayerException( "Error running INSERT statement: " + sql, sqle );
             }
             return true;
-        } else {
-            return post();
         }
+        return false;
     }
 
     @Override
@@ -204,8 +202,8 @@ public class Doctor extends AbstractDatabasePOJO {
     /**
      * Returns this object's fields as a String of comma-separated values.
      */
-    private static String asColumns() {
-        return "doctor_id, firstName, lastName, gender, email, phone, username";
+    private static String asInsertColumns() {
+        return "firstName, lastName, gender, email, phone, username";
     }
 
     /**

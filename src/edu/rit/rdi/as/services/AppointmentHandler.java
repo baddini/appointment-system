@@ -43,31 +43,30 @@ public class AppointmentHandler {
      *         person's identification number.
      */
     public Message login( String username, String password ) {
-        Message ret = new NullMessage();
+        Message m = new NullMessage();
         Security security = new Security();
         int id = Integer.MIN_VALUE;
 
         try {
             id = security.loginDoctor( username, password );
             if( id != -1 ) {
-                ret = new ServiceMessage();
-                ret.setValue( DOCTOR, String.valueOf( id ) );
-                return ret;
+                m = new ServiceMessage();
+                m.setValue( DOCTOR, String.valueOf( id ) );
+                return m;
             }
             id = security.loginPatient( username, password );
             if( id != -1 ) {
-                ret = new ServiceMessage();
-                ret.setValue( PATIENT, String.valueOf( id ) );
-                return ret;
+                m = new ServiceMessage();
+                m.setValue( PATIENT, String.valueOf( id ) );
+                return m;
             }
         } catch( DataLayerException dle ) {
-            ret = new ErrorMessage();
-            ret.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
-            ret.setValue( DISPLAY_ERROR, "There was an error trying to log in to the service." );
-            return ret;
+            m = new ErrorMessage();
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to log in to the service." );
         }
 
-        return ret;
+        return m;
     }
 
     /**
@@ -79,23 +78,23 @@ public class AppointmentHandler {
      *         {@link Patient}. A {@link ErrorMessage} will be returned if the fetch produced an exception.
      */
     public Message getPatientName( int patientId ) {
-        Message ret = new NullMessage();
+        Message m = null;
         try {
             Patient patient = new Patient( patientId );
             patient = (Patient) patient.fetch();
             if( patient == null ) {
-                return ret;
+                m = new NullMessage();
+            } else {
+                m = new ServiceMessage();
+                m.setValue( PATIENT, patient.getLastName() + ", " + patient.getFirstName() );
             }
-
-            ret = new ServiceMessage();
-            ret.setValue( PATIENT, patient.getLastName() + ", " + patient.getFirstName() );
-            return ret;
         } catch( DataLayerException dle ) {
-            ret = new ErrorMessage();
-            ret.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
-            ret.setValue( DISPLAY_ERROR, "There was an error trying to get the patient's name." );
-            return ret;
+            m = new ErrorMessage();
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to get the patient's name." );
         }
+
+        return m;
     }
 
     /**
@@ -313,7 +312,6 @@ public class AppointmentHandler {
         try {
             //Get the appointment to delete
             Appointment toDelete = parseAppointment( appointmentString, false );
-            //Update the old appointment's values with the new appointment's values.
             boolean success = toDelete.delete();
             if( success ) {
                 m = new ServiceMessage();
@@ -331,6 +329,40 @@ public class AppointmentHandler {
             m.setValue( DISPLAY_ERROR, "There was an error trying to update an appointment's information." );
         }
 
+        return m;
+    }
+
+    /**
+     * Add an appointment.
+     * @param appointmentString Information string for an appointment. This string must be formatted like:
+     *                          <code>Doctor_id,Patient_id,time,duration</code>.
+     * @return A {@link Message} that represents whether this add was successful or not.
+     *         <br/>{@link NullMessage} will be passed back if the add was unsuccessful.
+     *         <br/>{@link ErrorMessage} will be passed back if an error occurred.
+     *         <br/>A valid {@link ServiceMessage} will have an Appointment tag with the added information filled in:
+     *         "APPOINTMENT_ID,PATIENT_ID,DOCTOR_ID,Year-Day-Month Hours:Minutes:Seconds,duration"
+     */
+    public Message addAppointment( String appointmentString ) {
+        Message m = null;
+        
+        try {
+            Appointment appointment = parseAppointment( appointmentString, true );
+            boolean success = appointment.put();
+            if( success ) {
+                m = new ServiceMessage();
+                m.setValue( APPOINTMENT, appointment.getAppointmentId()
+                                         + "," + appointment.getPatientId()
+                                         + "," + appointment.getDoctorId()
+                                         + "," + appointment.getDate()
+                                         + "," + appointment.getDuration() );
+            } else {
+                m = new NullMessage();
+            }
+        } catch( DataLayerException dle ) {
+            m = new ErrorMessage();
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to update an appointment's information." );
+        }
         return m;
     }
 

@@ -126,6 +126,17 @@ public class AppointmentService {
     }
 
     /**
+     * @see AppointmentHandler#deleteAppointment(java.lang.String)
+     */
+    @GET
+    @Produces( "text/plain" )
+    @Consumes( "text/plain" )
+    @Path( "AddAppointment" )
+    public String addAppointment( @QueryParam( "appointment" ) String appointmentString ) {
+        return handler.addAppointment( appointmentString ).serialize();
+    }
+
+    /**
      * Builds a string from a list of messages.
      * @param messages The list of messages we want to serialize.
      * @return A string that contains all string representations of each Message in <code>messages</code>.
