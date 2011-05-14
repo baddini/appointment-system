@@ -12,9 +12,8 @@ public interface UnifiedDatabasePOJO {
 
     /**
      * Inserts the DatabasePOJO into the database. If this object's data already exists in the database,
-     * this method will run the post method instead.
-     * @return True if the put or post was successful, else false.
-     * @see UnifiedDatabasePOJO#post() 
+     * this method will return false.
+     * @return True if the put was successful, else false.
      */
     public boolean put() throws DataLayerException;
 
