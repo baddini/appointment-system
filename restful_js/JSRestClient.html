@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="./css/clientstubs.css" type="text/css"/>
         <link rel="stylesheet" href="./css/css_master-all.css" type="text/css"/>
         <!-- JS_DECLARE_START - DO NOT REMOVE-->
-        <script type="text/javascript" src="./Support.js"></script>
+        <script type="text/javascript" src="Support.js"></script>
         <script type="text/javascript">
-            var url = "http://simon.ist.rit.edu:8080/AppointmentSystem/resources/appointmentservice/";
+            var base_url = "http://simon.ist.rit.edu:8080/AppointmentSystem/resources/appointmentservice/";
             var mime = "text/plain";
         </script>
 
@@ -25,13 +25,10 @@
             <div id="main" class="main">
                 <h2>Appointment Service</h2>
                 <div id="containerContent"> </div>
-                
-                <script type="text/javascript">
-                    var str = '';
 
-                    str = "<h2>WRITING TONS OF SHIT</h2>";
-                    str += rjsSupport.get(url + "Login?username=app13&password=mypassword", "text/plain" );
-                    str += "<p/>" + rjsSupport.get(url + "PatientAppointments?patientId=1", mime);
+                <script type="text/javascript">
+                    var url = base_url + "Login?username=app13&password=mypassword";
+                    var str = rjsSupport.get(url, "text/plain");
                     document.write( str );
                 </script>
             </div>
