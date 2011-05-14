@@ -1,6 +1,7 @@
 package edu.rit.rdi.as.services;
 
 import edu.rit.rdi.as.datalayer.Appointment;
+import edu.rit.rdi.as.datalayer.Doctor;
 import edu.rit.rdi.as.datalayer.Patient;
 import edu.rit.rdi.as.datalayer.Security;
 import edu.rit.rdi.as.exceptions.DataLayerException;
@@ -92,6 +93,34 @@ public class AppointmentHandler {
             m = new ErrorMessage();
             m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
             m.setValue( DISPLAY_ERROR, "There was an error trying to get the patient's name." );
+        }
+
+        return m;
+    }
+
+    /**
+     * Gets a doctor's first and last name based on their unique identification number.
+     * @param doctorId The {@link Doctor}'s identification number.
+     * @return A {@link Message} that represents whether the fetch was successful. A successful fetch will return
+     *         a {@link ServiceMessage} with a tag of "DOCTOR" and the value will be formatted like:
+     *         "LastName, FirstName." A {@link NullMessage} will be returned if the fetch did not return a
+     *         {@link Doctor}. A {@link ErrorMessage} will be returned if the fetch produced an exception.
+     */
+    public Message getDoctorName( int doctorId ) {
+        Message m = null;
+        try {
+            Doctor doctor = new Doctor( doctorId );
+            doctor = (Doctor) doctor.fetch();
+            if( doctor == null ) {
+                m = new NullMessage();
+            } else {
+                m = new ServiceMessage();
+                m.setValue( DOCTOR, doctor.getLastName() + ", " + doctor.getFirstName() );
+            }
+        } catch( DataLayerException dle ) {
+            m = new ErrorMessage();
+            m.setValue( ERROR, dle.getMessage() + "\n" + stackTraceAsString( dle ) );
+            m.setValue( DISPLAY_ERROR, "There was an error trying to get the doctor's name." );
         }
 
         return m;
