@@ -55,6 +55,17 @@ public class AppointmentService {
     }
 
     /**
+     * @see AppointmentHandler#getDoctorName(int)
+     */
+    @GET
+    @Produces( "text/plain" )
+    @Consumes( "text/plain" )
+    @Path( "DoctorName" )
+    public String getDoctorName( @QueryParam( "doctorId" ) int doctorId ) {
+        return handler.getDoctorName( doctorId ).serialize();
+    }
+
+    /**
      * @see AppointmentHandler#getPatientAppointments(int)
      */
     @GET
