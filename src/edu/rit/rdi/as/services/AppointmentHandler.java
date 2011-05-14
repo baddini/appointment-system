@@ -373,7 +373,7 @@ public class AppointmentHandler {
      */
     public Message addAppointment( String appointmentString ) {
         Message m = null;
-        
+
         try {
             Appointment appointment = parseAppointment( appointmentString, true );
             boolean success = appointment.put();
@@ -421,9 +421,9 @@ public class AppointmentHandler {
         } catch( NumberFormatException nfe ) {
             throw new DataLayerException( "There was a number in the appointment string at an incorrect location."
                                           + "\n" + appointmentString, nfe );
-        } catch( ArrayIndexOutOfBoundsException oobe ) {
+        } catch( Exception e ) {
             throw new DataLayerException( "The appointment string does not contain the correct amount of data."
-                                          + "\n" + appointmentString, oobe );
+                                          + "\n" + appointmentString, e );
         }
     }
 }
