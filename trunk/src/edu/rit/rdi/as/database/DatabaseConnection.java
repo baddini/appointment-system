@@ -29,11 +29,11 @@ public class DatabaseConnection {
     /**
      * Default static configuration variables
      */
-    //TODO: Figure out a better way to store this crap
+    //TODO: This is a security risk. For the scope of the project, we can change this information to be stored
+    //in a different file if we have time.
     private static final String HOST = "simon.ist.rit.edu:3306";
     private static final String DATABASE = "rdi1";
     private static final String UID = "rdi1";
-    //TODO: Yeah... this is def a security risk.
     private static final String PASS = "Pw4k)7L7";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://";

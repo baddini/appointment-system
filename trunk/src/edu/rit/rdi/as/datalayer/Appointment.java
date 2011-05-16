@@ -202,24 +202,8 @@ public class Appointment extends AbstractDatabasePOJO {
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
         HashMap<String, String> columnsToData = asMap( false );
         for( String key : columnsToData.keySet() ) {
-            boolean isNum = false;
-            try {
-                int parsedKey = Integer.parseInt( columnsToData.get( key ) );
-                isNum = true;
-            } catch( NumberFormatException ignore ) {
-                //If the field we are putting into the database is a number, don't put any single quotes in
-                //the sql update query. We can ignore this exception because some fields are not numbers,
-                //so the expected result is a NumberFormatException, which means the update SQL query requires
-                //single quotations.
-            }
-            String sql = "";
-            if( isNum ) {
-                sql = "UPDATE " + Appointment + " SET " + key + " = " + columnsToData.get( key )
-                      + " WHERE appointment_id = " + appointmentId;
-            } else {
-                sql = "UPDATE " + Appointment + " SET " + key + " = '" + columnsToData.get( key ) + "'"
-                      + " WHERE appointment_id = " + appointmentId;
-            }
+            String sql = "UPDATE " + Appointment + " SET " + key + " = '" + columnsToData.get( key ) + "'"
+                         + " WHERE appointment_id = " + appointmentId;
             try {
                 executeUpdateQuery = conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
@@ -257,14 +241,14 @@ public class Appointment extends AbstractDatabasePOJO {
     public HashMap asMap( boolean includePrimaryKey ) {
         //Untyped hashmap, since we will be dealing with integers and Strings - easier to cast the information
         //since we know what we are getting
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<String, String>();
         if( includePrimaryKey ) {
             map.put( "appointment_id", String.valueOf( appointmentId ) );
         }
         map.put( "doctor_id", String.valueOf( doctorId ) );
         map.put( "patient_id", String.valueOf( patientId ) );
         map.put( "date", date );
-        map.put( "duration", duration );
+        map.put( "duration", String.valueOf( duration ) );
         return map;
     }
 
