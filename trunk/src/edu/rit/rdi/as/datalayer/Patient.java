@@ -129,8 +129,24 @@ public class Patient extends AbstractDatabasePOJO {
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
         HashMap<String, String> columnsToData = asMap( false );
         for( String key : columnsToData.keySet() ) {
-            String sql = "UPDATE " + Patient + " SET " + key + " = '" + columnsToData.get( key ) + "'"
-                         + " WHERE patient_id = " + patientId;
+            boolean isNum = false;
+            try {
+                int parsedKey = Integer.parseInt( columnsToData.get( key ) );
+                isNum = true;
+            } catch( NumberFormatException ignore ) {
+                //If the field we are putting into the database is a number, don't put any single quotes in
+                //the sql update query. We can ignore this exception because some fields are not numbers,
+                //so the expected result is a NumberFormatException, which means the update SQL query requires
+                //single quotations.
+            }
+            String sql = "";
+            if( isNum ) {
+                sql = "UPDATE " + Patient + " SET " + key + " = " + columnsToData.get( key )
+                      + " WHERE patient_id = " + patientId;
+            } else {
+                sql = "UPDATE " + Patient + " SET " + key + " = '" + columnsToData.get( key ) + "'"
+                      + " WHERE patient_id = " + patientId;
+            }
             try {
                 executeUpdateQuery = conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
