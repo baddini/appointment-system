@@ -5,7 +5,6 @@ import edu.rit.rdi.as.datalayer.Doctor;
 import edu.rit.rdi.as.datalayer.Patient;
 import edu.rit.rdi.as.datalayer.Security;
 import edu.rit.rdi.as.exceptions.DataLayerException;
-import edu.rit.rdi.as.services.messages.AbstractMessage;
 import edu.rit.rdi.as.services.messages.ErrorMessage;
 import edu.rit.rdi.as.services.messages.Message;
 import edu.rit.rdi.as.services.messages.NullMessage;
@@ -279,9 +278,10 @@ public class AppointmentHandler {
      * Change an appointment's time period, the doctor overseeing the appointment, or the patient who has the
      * appointment.
      * @param appointmentString Information string for an appointment. This string must be formatted like:
-     *                          <code>Doctor_id,Patient_id,time|Doctor_id,Patient_id,time,duration</code>
+     *                          <code>DoctorID,PatientID,time_DoctorID,PatientID,time,duration</code>
      *                          where pre-delimiter is the original appointment data, and post-delimiter is new
-     *                          appointment data.
+     *                          appointment data. Underscore is the delimiter because a '|' was causing problems
+     *                          with the {@link String#split(java.lang.String)} method.
      * @return A {@link Message} that represents whether this change was successful or not. 
      *         <br/>{@link NullMessage} will be passed back if there are no appointments found for the given
      *         doctor and patient, or if the appointment is for a different patient, or if the update was unsuccessful.
@@ -292,7 +292,7 @@ public class AppointmentHandler {
     public Message changeAppointment( String appointmentString ) {
         Message m = new NullMessage();
         //Split the parameter into OLD and NEW appointment strings.
-        String[] split = appointmentString.split( AbstractMessage.TAG_DELIM );
+        String[] split = appointmentString.split( "_" );
         if( split.length > 2 ) {
             return m;
         } else {
