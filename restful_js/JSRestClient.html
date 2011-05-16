@@ -29,7 +29,35 @@
                 <script type="text/javascript">
                     var url = base_url + "Login?username=app13&password=mypassword";
                     var str = rjsSupport.get(url, "text/plain");
-                    document.write( str );
+                    document.write( "<h1>Login:</h1><p>" + str + "</p>");
+					
+					url = base_url + "DoctorName?doctorId=5";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>DoctorName:</h1><p>" + str + "</p>");
+					
+					url = base_url + "DoctorAppointments?doctorId=5";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>DoctorAppointments:</h1><p>" + str + "</p>");
+					
+					url = base_url + "PatientName?patientId=2";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>PatientName:</h1><p>" + str + "</p>");
+					
+					url = base_url + "PatientAppointments?patientId=2";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>PatientAppointments:</h1><p>" + str + "</p>");
+					
+					url = base_url + "DayAppointments?timeframe=2011-05-17";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>Appointments for May 17th, 2001:</h1><p>" + str + "</p>");
+					
+					/*url = base_url + "TimespanAppointments?startTime=2011-05-17&endTime=2012-05-17";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>Appointments for 1 year from May 17th, 2001:</h1><p>" + str + "</p>");*/
+					
+					url = base_url + "DayAppointments?timeframe=2011-05-17";
+					str = rjsSupport.get(url, "text/plain");
+					document.write( "<h1>Appointments for May 17th, 2001:</h1><p>" + str + "</p>");
                 </script>
             </div>
         </div>
