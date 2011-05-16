@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import static edu.rit.rdi.as.datalayer.Tables.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * POJO for Doctor table.
@@ -131,8 +129,24 @@ public class Doctor extends AbstractDatabasePOJO {
         //We aren't updating the primary key of this table, so we don't want to include it in the map we receive.
         HashMap<String, String> columnsToData = asMap( false );
         for( String key : columnsToData.keySet() ) {
-            String sql = "UPDATE " + Doctor + " SET " + key + " = '" + columnsToData.get( key ) + "'"
-                         + " WHERE doctor_id = " + doctorId;
+            boolean isNum = false;
+            try {
+                int parsedKey = Integer.parseInt( columnsToData.get( key ) );
+                isNum = true;
+            } catch( NumberFormatException ignore ) {
+                //If the field we are putting into the database is a number, don't put any single quotes in
+                //the sql update query. We can ignore this exception because some fields are not numbers,
+                //so the expected result is a NumberFormatException, which means the update SQL query requires
+                //single quotations.
+            }
+            String sql = "";
+            if( isNum ) {
+                sql = "UPDATE " + Doctor + " SET " + key + " = " + columnsToData.get( key )
+                      + " WHERE doctor_id = " + doctorId;
+            } else {
+                sql = "UPDATE " + Doctor + " SET " + key + " = '" + columnsToData.get( key ) + "'"
+                      + " WHERE doctor_id = " + doctorId;
+            }
             try {
                 executeUpdateQuery = conn.executeUpdateQuery( sql );
             } catch( SQLException sqle ) {
